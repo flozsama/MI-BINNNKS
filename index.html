@@ -1311,9 +1311,20 @@ const ZI=()=>((lvl-1)/10|0)%TH.length;let VN=[],PD=[];
 function mkExtras(){const z=ZI();VN=[];PD=[];P.cv=null;
 if([0,1,6].includes(z))for(let i=rp(1,4);i--;)VN.push({x:rp(50,RW-70),y:rp(RF-100,RF-45)});
 if([2,3,5,7,8].includes(z))for(let i=rp(1,3);i--;){const p=plats.length&&Math.random()<.5?plats[rp(0,plats.length)]:null;PD.push(p?{x:p.x+rp(0,Math.max(1,p.w-26)),y:p.y,w:26,t:0}:{x:rp(60,RW-100),y:RF,w:26,t:0})}}
-function vineUpd(){if(P.vg>0)P.vg--;const v=VN.find(v=>Math.abs(P.x+9-v.x)<9&&P.y+P.h>8&&P.y<v.y);
-if(P.cv){if(!v||L()||R()){const s=L()||R();P.cv=null;P.vg=25;if(s)P.vy=-5.5}else{P.x+=(P.cv.x-9-P.x)*.3;P.vx=0;P.vy=J()?-2.2:(T.sy>.4||keys.KeyS||keys.ArrowDown)?2.2:0;P.jc=0;P.jp=1}}
-else if(v&&!P.vg&&(J()||(!P.og&&P.vy>0))){P.cv=v;P.vy=0;P.jc=0}}
+function vineUpd(){if(P.vg>0)P.vg--;
+/* FIX lianes : (1) l'ancien code lâchait la liane dès qu'une direction était vraie, même 1 frame (dérive du joystick tactile en grimpant) ;
+   (2) bande de capture de 9 px seulement, revalidée chaque frame ; (3) lâcher forcé quand la tête dépassait le bas de la liane.
+   Maintenant : capture élargie (14 px) + tolérance de maintien (22 px) ; sortie volontaire = direction MAINTENUE ~12 frames,
+   ou nouvel appui sur saut + direction (saut latéral) ; descendre au-delà du bas de la liane la quitte. */
+const inV=(q,m)=>Math.abs(P.x+9-q.x)<m&&P.y+P.h>8&&P.y<q.y+6,jn=!!J(),jEdge=jn&&!P.vj;P.vj=jn;
+if(P.cv){const q=P.cv,dr=!!(L()||R()),dn=T.sy>.4||keys.KeyS||keys.ArrowDown;
+ if(!VN.includes(q)||!inV(q,22)){P.cv=null;P.vg=12;P.vh=0}
+ else{P.vh=dr?(P.vh|0)+1:0;
+  if(dr&&jEdge&&P.vh>=3){const s=R()?1:-1;P.cv=null;P.vg=25;P.vh=0;P.vy=-7.4;P.jp=1;P.face=s;P.wk=8;P.wd=s} /* saut volontaire hors de la liane */
+  else if(P.vh>=12){P.cv=null;P.vg=25;P.vh=0;P.vy=-5.5} /* lâcher volontaire (direction maintenue) */
+  else{P.x+=(q.x-9-P.x)*.3;P.vx=0;P.vy=jn?-2.2:dn?2.2:0;P.jc=0;P.jp=1}}}
+else{P.vh=0;let v=null,bd=1e9;for(const q of VN)if(inV(q,14)){const d=Math.abs(P.x+9-q.x);if(d<bd){bd=d;v=q}}
+ if(v&&!P.vg&&(jn||(!P.og&&P.vy>0))){P.cv=v;P.vy=0;P.jc=0;P.vh=0}}}
 function padUpd(){for(const d of PD){if(d.t>0)d.t--;const f=P.y+P.h;if(!P.cv&&P.vy>=0&&P.x+P.w>d.x&&P.x<d.x+d.w&&f>=d.y-6&&f<=d.y+10){P.vy=ZI()==5?-11:-12.5;P.jc=0;d.t=14;burst(d.x+13,d.y,th.l,10)}}}
 function drawEx(){const z=ZI(),Lc=th.l;for(const v of VN){g.save();g.strokeStyle=Lc;g.globalAlpha=z==1?.55:.75;g.lineWidth=z==1?2:z==6?5:3;if(P.cv===v)glow(Lc,10);g.beginPath();g.moveTo(v.x,0);for(let y=8;y<=v.y;y+=8)g.lineTo(v.x+Math.sin(tick*.03+y*.05+v.x)*2.5,y);g.stroke();g.fillStyle=Lc;if(z==0||z==3)for(let y=24;y<v.y;y+=24){g.beginPath();g.ellipse(v.x+(y/24%2?5:-5),y,5,2.5,0,0,7);g.fill()}g.beginPath();g.ellipse(v.x,v.y+3,3,5,0,0,7);g.fill();g.restore()}
 for(const d of PD){const k=d.t/14,h=11*(1-.5*k),cx=d.x+13;g.save();glow(Lc,12);g.fillStyle=th.f;g.fillRect(d.x+3,d.y-4,20,4);g.fillStyle=Lc;g.beginPath();
@@ -1823,7 +1834,7 @@ function drawSkeletonProcedural(ctx, e, P, tick) {
 
 /* ===== MONSTRES PROCÉDURAUX : guêpe + squelette ===== */
 const PRO={pgc:pigDraw,pgd:pigDraw,wasp:drawMonsterProcedural,sks:drawSkeletonProcedural,mosq:drawMosquitoProcedural,fox:drawFoxProcedural,hedge:drawHedgehogProcedural,bat:drawBatProcedural};
-for(const k in VIS)PRO[k]=VIS[k].draw;Object.assign(ENN,{pere:'Père de famille',mere:'Mère de famille',gamin:'Gamin turbulent',retraite:'Retraité',chien:'Chien du parc'});
+for(const k in VIS)PRO[k]=VIS[k].draw;PRO.pgc=pigDraw;PRO.pgd=pigDraw; /* FIX pigeons : le dessin générique VIS écrasait pigDraw (pas de sprite de vol) */Object.assign(ENN,{pere:'Père de famille',mere:'Mère de famille',gamin:'Gamin turbulent',retraite:'Retraité',chien:'Chien du parc'});
 const EE={x:0,y:0,w:22,h:24,vx:0,vy:0,ph:0,ag:1,pd:1,fl:0},EP={x:0,y:0};
 function rlPro(e,fn){const k=(e.fl?.9:1)*(e.br?1.3:1),cx=e.x+e.w/2,ay=e.fl?e.y+e.h/2:e.y+e.h+2;g.save();g.imageSmoothingEnabled=false;g.translate(cx,ay);g.scale(k,k);g.translate(-cx,-ay);fn(g,e,P,tick);
 if(e.hf>0&&!fn.noFlash){g.globalCompositeOperation='lighter';g.globalAlpha=Math.min(1,e.hf/4)*.7;g.fillStyle='#fff';g.beginPath();g.arc(cx,e.y+e.h/2,16,0,7);g.fill()}g.restore()}
