@@ -5056,6 +5056,86 @@ wmTick();{const t=wmT();if(t>=3&&P.at>0&&tick%Math.max(1,6-(t>>1))==0)parts.push
       else if (m.t === 'peer' || m.t === 'paired') NET.attach(ws, role === 'host' ? 'host' : 'guest');
     };
   };
+  /* ===== MODE EN LIGNE : serveur Node.js + Socket.io (salons à 2 joueurs) =====
+   * INSÉRER CE BLOC dans le <script> « crypte_neon_net.js », juste AVANT la ligne :
+   *     let pc = null, step = 0;
+   * Le netcode existant (J1 = hôte autoritaire, J2 = invité qui envoie ses touches et affiche les snapshots)
+   * n'est PAS modifié : on fournit seulement un « canal » compatible NET.attach() (send / onmessage / onclose /
+   * readyState), exactement comme le WebSocket du mode LAN. */
+  const ONLINE_URL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname)
+    ? 'http://' + location.hostname + ':3000'          // test local : node server.js
+    : 'https://mi-serveur.onrender.com';            // <-- REMPLACE par l'URL de ton serveur déployé (https obligatoire)
+  let sioP = null, OS = null, pingTm = 0;
+  const loadSio = () => sioP || (sioP = new Promise((ok, ko) => {          // le client socket.io est servi par le serveur lui-même (même version)
+    if (window.io) return ok(window.io);
+    const s = document.createElement('script'); s.src = ONLINE_URL + '/socket.io/socket.io.js';
+    s.onload = () => window.io ? ok(window.io) : ko(new Error('io'));
+    s.onerror = () => { sioP = null; s.remove(); ko(new Error('load')); };
+    document.head.appendChild(s);
+  }));
+
+  /* Canal « façon WebSocket » au-dessus d'une socket Socket.io.
+   * Snapshots ('s', 30 Hz) et touches ('i', 60 Hz) : volatiles, un paquet en retard est jeté (= l'ancien canal WebRTC non fiable).
+   * Tout le reste (choix d'arme, boutique, coffres, ramassages…) : fiable et ordonné. */
+  const mkChan = (sock, onEnd) => {
+    const c = {
+      readyState: 1, onmessage: null, onclose: null, onopen: null,
+      send(s) {
+        if (c.readyState !== 1 || typeof s !== 'string') return;
+        if (s.startsWith('{"t":"s"') || s.startsWith('{"t":"i"')) sock.volatile.emit('v', s); else sock.emit('m', s);
+      },
+      close() { if (c.readyState === 3) return; sock.emit('leave'); end(); }
+    };
+    const end = () => { if (c.readyState === 3) return; c.readyState = 3; onEnd && onEnd(); if (c.onclose) c.onclose(); sock.close(); };
+    sock.on('m', d => { if (c.readyState === 1 && typeof d === 'string' && c.onmessage) c.onmessage({ data: d }); });
+    sock.on('peer-left', end); sock.on('disconnect', end);
+    return c;
+  };
+
+  /* --- interface : ligne « En ligne » en haut du panneau --- */
+  const row = el('div', 'margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid #3a2f80');
+  const bO = el('button', btnCss, '🌐 Créer un salon'), bOJ = el('button', btnCss, '🌐 Rejoindre');
+  const inCode = el('input', 'width:64px;font:700 15px monospace;text-align:center;text-transform:uppercase;padding:7px;margin:3px;border-radius:8px;border:1px solid #8a7dff;background:#1b1640;color:#e8e6ff;user-select:text;-webkit-user-select:text;touch-action:auto');
+  inCode.maxLength = 4; inCode.placeholder = 'CODE'; inCode.autocomplete = 'off'; inCode.autocapitalize = 'characters'; inCode.spellcheck = false;
+  const pingEl = el('span', 'margin-left:6px;color:#7af0ff');
+  row.append(bO, inCode, bOJ, pingEl); panel.insertBefore(row, panel.firstChild);
+  tog.textContent = '🔗 Jouer à deux'; bH.textContent = 'Héberger (LAN)'; bJ.textContent = 'Rejoindre (LAN)';
+
+  const ERR = { not_found: 'Salon introuvable (code faux ou expiré).', full: 'Ce salon est déjà complet.', self: 'C’est ton propre salon.', busy: 'Serveur occupé, réessaie dans un instant.' };
+  const online = async role => {
+    if (NET.open) { msg.textContent = 'Déjà connecté.'; return; }
+    const code = inCode.value.trim().toUpperCase();
+    if (role === 'join' && !/^[A-Z0-9]{4}$/.test(code)) { msg.textContent = 'Entre le code à 4 caractères donné par J1.'; return; }
+    msg.textContent = 'Connexion au serveur… (le 1er lancement peut prendre ~1 min)';
+    let io; try { io = await loadSio(); } catch (e) { msg.textContent = 'Serveur en ligne injoignable (URL ? serveur endormi ?).'; return; }
+    if (OS) OS.close();
+    const sock = OS = io(ONLINE_URL, { transports: ['websocket'], reconnection: false, timeout: 15000 });
+    let paired = false;
+    const fail = t => { if (!paired) msg.textContent = t; sock.close(); };
+    sock.on('connect_error', () => fail('Connexion au serveur impossible.'));
+    sock.on('disconnect', () => { if (!paired) msg.textContent = 'Déconnecté du serveur.'; });
+    sock.on('room-expired', () => fail('Salon expiré (10 min sans J2). Recrée-le.'));
+    sock.on('paired', info => {
+      paired = true; ta.style.display = bC.style.display = 'none'; msg.textContent = 'Joueur trouvé !';
+      NET.attach(mkChan(sock, () => { clearInterval(pingTm); pingEl.textContent = ''; }), info && info.role === 'host' ? 'host' : 'guest');
+      clearInterval(pingTm);
+      pingTm = setInterval(() => { if (!sock.connected) return; const t0 = performance.now(); sock.emit('p', () => { pingEl.textContent = '🌐 ' + Math.round(performance.now() - t0) + ' ms'; }); }, 2000);
+    });
+    sock.on('connect', () => {
+      const done = r => {
+        if (!r || !r.ok) return fail(ERR[r && r.err] || 'Erreur serveur.');
+        if (role !== 'host') { msg.textContent = 'Salon trouvé, connexion…'; return; }
+        inCode.value = r.code; ta.value = location.origin + location.pathname + '?room=' + r.code;
+        ta.style.display = 'block'; bC.style.display = 'inline-block'; bC.textContent = 'Copier'; bA.style.display = 'none';
+        msg.textContent = 'Salon ' + r.code + ' créé. Envoie le code (ou ce lien) à J2 — en attente…';
+      };
+      role === 'host' ? sock.emit('create', done) : sock.emit('join', code, done);
+    });
+  };
+  bO.onclick = () => online('host'); bOJ.onclick = () => online('join');
+  inCode.addEventListener('keydown', e => { if (e.key === 'Enter') online('join'); });
+  { const q = new URLSearchParams(location.search).get('room');             // lien d'invitation  …/?room=ABCD
+    if (q && /^[A-Za-z0-9]{4}$/.test(q)) { inCode.value = q.toUpperCase(); panel.style.display = 'block'; msg.textContent = 'Code ' + inCode.value + ' détecté : appuie sur « Rejoindre ».'; } }
   let pc = null, step = 0;
   const fresh = () => { pc = new RTCPeerConnection({ iceServers: [] }); return pc; };
   bH.onclick = async () => {
