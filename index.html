@@ -8455,6 +8455,23 @@ try{MB[4]=imgCanvas(GD.ladyEnc.b,1);MB[DENI_I]=imgCanvas(GD.deniEnc.b,.9)}catch(
   const b=o[4];if(b&&!b.hid)b.l[1]='Salle 50 · Gardes → Dragon → Lady';
   const d=o[DENI_I];if(d){d.crop=false;if(!d.hid)d.l=['Le Guest’s · salle 1 · videur','Mini-boss · 2 phases (électrique)',d.l[2]]}}}catch(x){}return o}}
 
+/* ---- ENCYCLOPÉDIE : les 3 gardes du corps (Aya · Mia · Luna) + le dragon à trois têtes, placés entre KING LIL TIM et LADY BARONA ---- */
+const ENC_G=[['AYA','aya','run'],['MIA','mia','run'],['LUNA','luna','run'],['DRAGON À 3 TÊTES','dragon','fly']];
+const ENC_G0=BNZ.length;                              // indices 10..13 (hors zones : spawnBoss utilise s%9)
+ENC_G.forEach(g2=>BNZ.push(g2[0]));
+ENC_G.forEach((g2,i)=>{const A=GA[g2[1]],c=document.createElement('canvas');c.width=c.height=192;MB[ENC_G0+i]=c;
+  const draw=()=>{try{const m=A.M[g2[2]],x=c.getContext('2d'),sc=Math.min(184/m[1],184/m[2])*(i==3?.95:.9);x.imageSmoothingEnabled=false;x.clearRect(0,0,192,192);
+    x.drawImage(A.img,0,m[0],m[1],m[2],96-m[1]*sc/2,188-m[2]*sc,m[1]*sc,m[2]*sc);c.__bb=undefined}catch(e){}};
+  if(A.img.complete&&A.img.naturalWidth)draw();else A.img.addEventListener('load',draw)});
+window.encBossKill=function(name){try{const i=ENC_G.findIndex(q=>q[1]===name);if(i<0)return;const r=bsR('B'+(ENC_G0+i));if(!r.s)bsSee('B'+(ENC_G0+i),r);r.k++;saveST()}catch(x){}};
+{const s1=bsScan;bsScan=function(){s1.apply(this,arguments);try{for(const e of E){if(!(e.hp>0)||!e.gst)continue;let i=ENC_G.findIndex(q=>q[1]===e.gst);if(i<0&&(e.gst==='ddie'||e.gst==='dragon'))i=3;if(i<0)continue;const r=bsR('B'+(ENC_G0+i));if(!r.s)bsSee('B'+(ENC_G0+i),r)}}catch(x){}}}
+{const l1=enList;enList=function(t){const o=l1.apply(this,arguments);try{if(t==1){
+  const add=o.splice(ENC_G0,ENC_G.length);
+  const inf=['Chaînes · pointes · coup au sol','Disques · pointes · attaque aérienne','Anneaux · lame · fantôme · téléport','Orbes · météorites · lasers · souffle'];
+  add.forEach((d,i)=>{d.crop=false;d.sz=52;if(!d.hid)d.l=['Le Guest’s · salle 50 · '+(i<3?'garde du corps':'phase 2/3'),inf[i],d.l[2]]});
+  const dn=o.splice(DENI_I,1)[0];                      // DENI (videur, salle 1) juste après KING LIL TIM
+  o.splice(4,0,...(dn?[dn]:[]),...add)}}catch(x){}return o}}
+
 
 /* =====================================================================================
    4 · DÉCOR DU GUEST’S — rendu 100 % Canvas 2D, visuel seulement
@@ -8691,9 +8708,10 @@ const clubOn=()=>{try{return Z5()&&th===TH[4]&&!CLUB.dead}catch(e){return false}
    qu’une fois, à la mort de Lady Barona. Gardes et dragon : sub + fzSum (ni or de boss, ni soin, ni compteur de boss).
    Toutes les zones de dégâts sont annoncées (télégraphe) et décrites sur l’entité (e.hz) : J2 les voit aussi.
    ===================================================================================== */
-const GB={HPG:.32,HPD:.9,HPL:1,SPG:1.5,SPL:1.65,TOKGAP:34,INTRO:80,FUSE_F:14,DR_INTRO:60,DDIE:70,LADY_LAND:50,
+const GB={HPG:.48,HPD:.9,HPL:1,SPG:1.5,SPL:1.65,TOKGAP:34,INTRO:80,FUSE_F:14,DR_INTRO:60,DDIE:70,LADY_LAND:50,
  DMG:{chain:1,spike:1,slash:1,wave:1,beam:1.5,met:1.2,breath:1.5,lslam:1.5,lthrow:1.2,lwrap:1.5}};
 window.GUEST_BOSS=GB;
+const DRS=1.5;   /* échelle du dragon à trois têtes (≈ 3× la hauteur du joueur) */
 const GNM={aya:'Aya',mia:'Mia',luna:'Luna',dragon:'Dragon à trois têtes',lady:'Lady Barona'};
 const GCOL={aya:'#ff3b4e',mia:'#ffd23f',luna:'#3dff8a',dragon:'#ff7a3d',lady:'#c77dff'};
 const GUARDS=['aya','mia','luna'];
@@ -8778,21 +8796,21 @@ function guardAttack(e,dx,ad){const k=++e.gK,f=e.fc,cx=e.x+e.w/2,fy=e.y+e.h;
 function fuseAI(e){e.vx=0;
  if(e.gT===1){e.hz=[];BP=BP.filter(b=>b.gk==='hit');TOK={who:null,gap:0};e.x=RW/2-e.w/2;e.y=RF-e.h;TO.push({t:'⚠ Les trois gardes fusionnent !',u:0});shk=Math.max(shk,10)}
  if(e.gT%3===0){const a=e.gT*.25,c=[GCOL.aya,GCOL.mia,GCOL.luna][e.gT%3];parts.push({x:RW/2+Math.cos(a)*70,y:RF-60+Math.sin(a)*40,vx:-Math.cos(a)*2.4,vy:-Math.sin(a)*1.4,l:28,c,s:3,gr:0})}
- if(e.gT>=6*GB.FUSE_F+12){const hp=gBase()*GB.HPD;Object.assign(e,{gst:'dragon',gstN:GNM.dragon,w:84,h:62,x:RW/2-42,y:RF-150,hp,mhp:hp,gHold:hp,gS:'intro',gT:0,gA:'',gK:0,gInv:1,cd:60,side:P.x+9<RW/2?1:0,last:'',fc:gFace(e)});
+ if(e.gT>=6*GB.FUSE_F+12){const hp=gBase()*GB.HPD;Object.assign(e,{gst:'dragon',gstN:GNM.dragon,w:Math.round(84*DRS),h:Math.round(62*DRS),x:RW/2-Math.round(42*DRS),y:RF-150-Math.round(31*(DRS-1)),hp,mhp:hp,gHold:hp,gS:'intro',gT:0,gA:'',gK:0,gInv:1,cd:30,side:P.x+9<RW/2?1:0,last:'',fc:gFace(e)});
   shk=Math.max(shk,14);hs=Math.max(hs,4);burst(RW/2,RF-80,'#ffffff',40);burst(RW/2,RF-80,GCOL.dragon,40)}}
 function dragonAI(e){const cx=e.x+e.w/2,px=P.x+9,rage=e.hp<e.mhp*.5;e.vx=0;
- const hover=()=>{const tx=e.side?RW-40-e.w:40,ty=RF-172+Math.sin(e.t*.05)*10;e.x+=Math.max(-2.4,Math.min(2.4,(tx-e.x)*.03));e.y+=(ty-e.y)*.06;e.fc=px>cx?1:-1};
- if(e.gS==='intro'){e.y+=(RF-170-e.y)*.05;e.fc=px>cx?1:-1;if(e.gT===1)TO.push({t:'🐉 DRAGON À TROIS TÊTES',u:0});if(e.gT>=GB.DR_INTRO){e.gS='hover';e.gT=0;e.gInv=0;e.gHold=e.hp;e.cd=50}return}
+ const hover=()=>{const tx=e.side?RW-40-e.w:40,ty=RF-172-(e.h-62)/2+Math.sin(e.t*.05)*10;e.x+=Math.max(-2.4,Math.min(2.4,(tx-e.x)*.03));e.y+=(ty-e.y)*.06;e.fc=px>cx?1:-1};
+ if(e.gS==='intro'){e.y+=(RF-170-(e.h-62)/2-e.y)*.05;e.fc=px>cx?1:-1;if(e.gT===1)TO.push({t:'🐉 DRAGON À TROIS TÊTES',u:0});if(e.gT>=GB.DR_INTRO){e.gS='hover';e.gT=0;e.gInv=0;e.gHold=e.hp;e.cd=25}return}
  if(!e.gA){hover();if(--e.cd<=0){const L=['orbs','meteor','laser','breath'].filter(k=>k!==e.last);e.gA=L[(Math.random()*L.length)|0];e.last=e.gA;e.gK=0}return}
- const k=++e.gK,f=e.fc,mx=cx+f*40,my=e.y+12;
- const done=()=>{e.gA='';e.gK=0;e.side=Math.random()<.5?0:1;e.cd=(rage?62:86)+Math.random()*20};
+ const k=++e.gK,f=e.fc,mx=cx+f*40*DRS,my=e.y+12*DRS;
+ const done=()=>{e.gA='';e.gK=0;e.side=Math.random()<.5?0:1;e.cd=((rage?62:86)+Math.random()*20)/2};
  switch(e.gA){
   case 'orbs':hover();if(k===36||k===48||k===60){const i=(k-36)/12,sp=3,a=Math.atan2(P.y+13-my,px-mx);BP.push({x:mx,y:my,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,r:7,l:240,c:'rgba(0,0,0,0)',gk:'dorb',ci:i});burst(mx,my,['#ff3b4e','#ffd23f','#3dff8a'][i],8)}if(k>=84)done();break;
   case 'meteor':hover();if(k===1){const n=5,xs=[];for(let i=0;i<n;i++)xs.push(Math.round(40+i*(RW-80)/(n-1)+(Math.random()*24-12)));const ord=[0,1,2,3,4].sort(()=>Math.random()-.5);
     ord.forEach((i,j)=>hz(e,{k:'met',x:xs[i],ci:i%3,a:60+j*12,d:12,p:22,dmg:GB.DMG.met}))}if(k>=60+5*12+34)done();break;
   case 'laser':hover();if(k===1){const xs=[px,px-140,px+140].map(x=>Math.max(30,Math.min(RW-30,Math.round(x)))).filter((x,i,a)=>a.findIndex(y=>Math.abs(y-x)<40)===i);xs.forEach((x,i)=>hz(e,{k:'beam',x,ci:i%3,a:62,d:22,p:10,dmg:GB.DMG.beam}))}if(k===62)shk=Math.max(shk,6);if(k>=100)done();break;
   case 'breath':{if(k===1){e.bL=cx<RW/2;e.bx=e.bL?18:RW-18-e.w}const gy=RF-e.h;
-   if(!e.bOn){e.x+=(e.bx-e.x)*.08;e.y+=(gy-e.y)*.08;e.fc=e.bL?1:-1;if(k>=50||(Math.abs(e.x-e.bx)<3&&Math.abs(e.y-gy)<3)){e.bOn=k;e.x=e.bx;e.y=gy;const c2=e.x+e.w/2;hz(e,{k:'breath',x:c2+e.fc*40,f:e.fc,L:250,a:50,d:34,p:6,dmg:GB.DMG.breath})}}
+   if(!e.bOn){e.x+=(e.bx-e.x)*.08;e.y+=(gy-e.y)*.08;e.fc=e.bL?1:-1;if(k>=50||(Math.abs(e.x-e.bx)<3&&Math.abs(e.y-gy)<3)){e.bOn=k;e.x=e.bx;e.y=gy;const c2=e.x+e.w/2;hz(e,{k:'breath',x:c2+e.fc*40*DRS,f:e.fc,L:250,a:50,d:34,p:6,dmg:GB.DMG.breath})}}
    else{e.fc=e.bL?1:-1;if(k===e.bOn+50)shk=Math.max(shk,6);if(k>=e.bOn+50+34+18){e.bOn=0;done()}}break}
   default:done()}}
 function ddieAI(e){e.vx=0;if(e.gT===1){e.hz=[];BP=BP.filter(b=>b.gk==='hit');TO.push({t:'Le dragon s’effondre…',u:0});shk=Math.max(shk,12)}
@@ -8822,9 +8840,9 @@ window.gstSave=function(e){
  if(isGuard(e)){if(TOK.who===e){TOK.who=null;TOK.gap=GB.TOKGAP}
   /* plusieurs gardes peuvent tomber dans la même frame (coup de zone) : une seule devient la fusion */
   const others=E.some(o=>o!==e&&((isGuard(o)&&o.hp>0)||o.gst==='fuse'||o.gst==='dragon'||o.gst==='ddie'||o.gst==='lady'));
-  if(others){say('K.O.',e.x-4,e.y-14,GCOL[e.gst]);return false}
-  Object.assign(e,{gst:'fuse',gstN:'Fusion',gS:'fuse',gT:0,gA:'',gK:0,gInv:1,gHide:0,hp:1,gHold:1,mhp:1,w:40,h:60,hz:[]});return true}
- if(e.gst==='dragon'){Object.assign(e,{gst:'ddie',gS:'die',gT:0,gA:'',gK:0,gInv:1,hp:1,gHold:1,bOn:0});return true}
+  if(others){window.encBossKill&&encBossKill(e.gst);say('K.O.',e.x-4,e.y-14,GCOL[e.gst]);return false}
+  window.encBossKill&&encBossKill(e.gst);Object.assign(e,{gst:'fuse',gstN:'Fusion',gS:'fuse',gT:0,gA:'',gK:0,gInv:1,gHide:0,hp:1,gHold:1,mhp:1,w:40,h:60,hz:[]});return true}
+ if(e.gst==='dragon'){window.encBossKill&&encBossKill('dragon');Object.assign(e,{gst:'ddie',gS:'die',gT:0,gA:'',gK:0,gInv:1,hp:1,gHold:1,bOn:0});return true}
  if(e.gst==='fuse'||e.gst==='ddie'){e.hp=Math.max(1,e.gHold||1);return true}
  GRAB=null;TOK={who:null,gap:60};return false};
 
@@ -8876,13 +8894,13 @@ function drawFuse(e){const A=GA.fusion,F=GB.FUSE_F,fi=Math.min(5,(e.gT/F)|0),cx=
 function drawDragon(e){const A=GA.dragon;if(!A.ready)return;const cx=e.x+e.w/2,k=e.gK|0;let row='fly',fi=((tick/7)|0),air=true,al=1;
  if(e.gst==='ddie'){row='rage';fi=((e.gT/8)|0);al=e.gT>40?Math.max(0,1-(e.gT-40)/30)*(tick%6<3?.5:1):1;air=e.y+e.h<RF-4}
  else if(e.gS==='intro'){row='rage';fi=((e.gT/12)|0)}
- else if(e.gA==='orbs'){row='disc';fi=0;if(k<36){const mx=cx+e.fc*40,my=e.y+12;for(let i=0;i<3;i++)aura(mx,my-8+i*8,RGB3[i],6+k*.3,.6)}}
+ else if(e.gA==='orbs'){row='disc';fi=0;if(k<36){const mx=cx+e.fc*40*DRS,my=e.y+12*DRS;for(let i=0;i<3;i++)aura(mx,my-8*DRS+i*8*DRS,RGB3[i],(6+k*.3)*DRS,.6)}}
  else if(e.gA==='meteor'){row='meteor';fi=0}
  else if(e.gA==='laser'){row='laser';fi=0}
- else if(e.gA==='breath'){if(e.bOn){row='breath';fi=0;air=false;if(k<e.bOn+50)aura(cx+e.fc*44,RF-30,'#ff7a3d',14+(k-e.bOn)*.3,.5)}else{row='rise';fi=((tick/8)|0)}}
- const sh=Math.max(.15,1-(RF-(e.y+e.h))/220);g.save();g.globalAlpha=sh*.8;g.fillStyle='rgba(0,0,0,.4)';g.beginPath();g.ellipse(cx,RF-1,40*sh,5*sh,0,0,TAU);g.fill();g.restore();
- aura(cx,e.y+e.h/2,'#ff3df2',60,.12);
- gBlit(g,A,row,fi,cx,air?e.y+e.h+18:e.y+e.h+1,e.fc||1,1,e.hf,al)}
+ else if(e.gA==='breath'){if(e.bOn){row='breath';fi=0;air=false;if(k<e.bOn+50)aura(cx+e.fc*44*DRS,RF-30*DRS,'#ff7a3d',(14+(k-e.bOn)*.3)*DRS,.5)}else{row='rise';fi=((tick/8)|0)}}
+ const sh=Math.max(.15,1-(RF-(e.y+e.h))/220);g.save();g.globalAlpha=sh*.8;g.fillStyle='rgba(0,0,0,.4)';g.beginPath();g.ellipse(cx,RF-1,40*DRS*sh,5*DRS*sh,0,0,TAU);g.fill();g.restore();
+ aura(cx,e.y+e.h/2,'#ff3df2',60*DRS,.12);
+ gBlit(g,A,row,fi,cx,air?e.y+e.h+Math.round(18*DRS):e.y+e.h+1,e.fc||1,DRS,e.hf,al)}
 function drawLady(e){const A=GA.lady;if(!A.ready)return;pxV(e);const cx=e.x+e.w/2,fy=e.y+e.h+1,k=e.gK|0;let row=null,fi=0;
  if(e.gS==='in'){if(!e.og){row='jump';fi=e.vy<0?2:3}else{row='slam';fi=0;aura(cx,e.y+e.h/2,GCOL.lady,40,.25*Math.max(0,1-(e.gT-(e.gLand||0))/GB.LADY_LAND))}}
  else if(e.gA){switch(e.gA){
