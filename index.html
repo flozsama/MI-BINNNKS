@@ -277,7 +277,7 @@ for(let d=0;d<RW;d+=6)for(const sg of d?[1,-1]:[1]){const x=Math.round(a+sg*d);i
 return Math.max(28,Math.min(RW-28-w,def))}
 function pick(i){if(!choice||Date.now()-choiceT<500)return;const rr=choice[0]&&choice[0].rr;if(i==(window.nr3c&&nr3c()?3:2)&&!rr){const fr=rlFree();if(fr||gold>=rrCost()){if(fr)P.diceU=1;else{gold-=rrCost();P.rrn=(P.rrn||0)+1}window.__rrK=1;roll(choice[0]&&choice[0].rl);choiceT=Date.now()}return}const u=choice[i];if(!u)return;const c0=choice;u.f();if(!rr)say(u.n,P.x-10,P.y-12,u.c);burst(P.x+9,P.y+13,u.c,20);if(choice&&choice!==c0){choiceT=Date.now();return}choice=null;if(RQ){RQ=0;roll(0);choiceT=Date.now()}}
 function asK(e,fn){const N=window.NET;if(e&&e.lh==2&&N&&N.role=='host'&&N.P2&&P!==N.P2){const s=P,sg=gold;P=N.P2;gold=P.gold||0;try{return fn()}finally{N.P2.gold=gold;gold=sg;P=s}}return fn()}
-function dmgEO(e,d,k){if(e.klt&&(e.kInv||e.ks==KLT_S.P1)){if(tick%15==0)say('INVINCIBLE',e.x,e.y-14,'#ffe27a');return}if(e.floz&&e.fInv){if(tick%15==0)say('INVINCIBLE',e.x,e.y-14,'#9dffc8');return}d*=wmB().dm*(1+swBonus().dm);d*=rlDm(e);if(window.bnDm)d*=bnDm(e);e.hf=7;if(!e.ag&&!e.gb&&!e.bs)wmAlert(e);if(P.ls&&P.hp<P.max)P.hp=Math.min(P.max,P.hp+d*Math.min(.4,P.ls));if(P.xw&&P.xw.n=='LAME INFERNALE')e.burn=150;if(e.gb){e.hits++;const n=window.bxGold?bxGold((1+lvl*.2)*(1+e.hits*.4),0):Math.round((1+lvl*.2)*(1+e.hits*.4)*P.gm);(window.bnCoin||((e,n)=>{gold+=n}))(e,n);ST.gold+=n;burst(e.x+11,e.y+8,'#ffd166',8);say('+'+n+' ◆',e.x,e.y-14,'#ffd166')}if(Math.random()<Math.min(.75,P.cr+wmB().cr+rlCr()+(window.bnCr?bnCr():0))){d*=2+swBonus().cd;ST.crits++;hs=Math.max(hs,3);shk=Math.max(shk,3);say('CRIT!',e.x,e.y-20,'#ff9f1c');rlShark(e)}e.hp-=d;dpsAdd(d+(P.xw&&P.xw.mg||0));if(P.xw&&P.xw.mg){e.hp-=P.xw.mg;say('+'+P.xw.mg+'✦',e.x+14,e.y-20,P.xw.c);burst(e.x+10,e.y+10,P.xw.c,5)}e.kb=e.bs||e.el=='bli'?0:k;burst(e.x+10,e.y+10,'#ff7ad9',6);say('-'+Math.round(d),e.x,e.y-8,'#ffd166');bfHit(e,d);rlHit(e,d)}
+function dmgEO(e,d,k){if(e.klt&&(e.kInv||e.ks==KLT_S.P1)){if(tick%15==0)say('INVINCIBLE',e.x,e.y-14,'#ffe27a');return}if(e.floz&&e.fInv){if(tick%15==0)say('INVINCIBLE',e.x,e.y-14,'#9dffc8');return}d*=wmB().dm*(1+swBonus().dm);d*=rlDm(e);if(window.bnDm)d*=bnDm(e);e.hf=7;if(!e.ag&&!e.gb&&!e.bs)wmAlert(e);if(window.bxLs)bxLs(e);if(P.xw&&P.xw.n=='LAME INFERNALE')e.burn=150;if(e.gb){e.hits++;const n=window.bxGold?bxGold((1+lvl*.2)*(1+e.hits*.4),0):Math.round((1+lvl*.2)*(1+e.hits*.4)*P.gm);(window.bnCoin||((e,n)=>{gold+=n}))(e,n);ST.gold+=n;burst(e.x+11,e.y+8,'#ffd166',8);say('+'+n+' ◆',e.x,e.y-14,'#ffd166')}if(Math.random()<Math.min(.75,P.cr+wmB().cr+rlCr()+(window.bnCr?bnCr():0))){d*=2+swBonus().cd;ST.crits++;hs=Math.max(hs,3);shk=Math.max(shk,3);say('CRIT!',e.x,e.y-20,'#ff9f1c');rlShark(e)}e.hp-=d;dpsAdd(d+(P.xw&&P.xw.mg||0));if(P.xw&&P.xw.mg){e.hp-=P.xw.mg;say('+'+P.xw.mg+'✦',e.x+14,e.y-20,P.xw.c);burst(e.x+10,e.y+10,P.xw.c,5)}e.kb=e.bs||e.el=='bli'?0:k;burst(e.x+10,e.y+10,'#ff7ad9',6);say('-'+Math.round(d),e.x,e.y-8,'#ffd166');bfHit(e,d);rlHit(e,d)}
 function hb(){const f=P.face,r=P.rn*wmB().rn,c=P.x+9;
 if(P.qa!=null){const q=P.qa,co=Math.cos(q),si=Math.sin(q),cy=P.y+13;
 if(P.wp=='spear'){const L=64*r;return{x:c+Math.min(0,co*L)-6,y:cy+Math.min(0,si*L)-6,w:Math.abs(co*L)+12,h:Math.abs(si*L)+12,m:1.1,k:5,c:e=>segHit(c,cy,c+co*L,cy+si*L,e,6)}}
@@ -1725,7 +1725,7 @@ r('Dégâts totaux  (×'+f1(b.dm)+' maîtrise'+(rlAll()?', ×'+f1(1+rlAll())+' r
 r('Critique (x2)',pc(Math.min(.75,P.cr+b.cr+rlCr()+(window.bnCr?bnCr():0)))+(b.cr?'  (maîtrise +8%)':''),X,y);y+=18;
 r('Portée',P.wp=='chak'?'—':'×'+f1(b.rn*(P.wp=='bow'||P.wp=='staff'?1:P.rn)),X,y);y+=18;
 r('Cooldown',f1((P.wp=='staff'?nwCdf():P.rate*w.cd)*b.cd/60)+' s  ('+(b.cd<1?'-'+f1((1-b.cd)*100)+'%':'—')+')',X,y);y+=18;
-r('Vampirisme',(pc(Math.min(.4,P.ls))+(P.ls>=.4?' (max)':'')),X,y);y+=18;r('Dégât magique',x2&&x2.mg?'+'+x2.mg+' / coup':'—',X,y);
+r('Vol de vie (chance)',(pc(Math.min(.4,P.ls))+(P.ls>=.4?' (max)':'')),X,y);y+=18;r('Dégât magique',x2&&x2.mg?'+'+x2.mg+' / coup':'—',X,y);
 stPanel('👟 DÉPLACEMENT & SURVIE',326,y0,302,h,'#5df2ff');y=y0+40;X=326;const rr=(l,v,c)=>{stRow(l,v,X,y,296,c);y+=18};
 rr('Vitesse de base','2,2');rr('+ améliorations','+'+f1(P.sp-2.2-(x2?x2.sp:0)),'#5df2ff');rr('+ arme exclusive',x2&&x2.sp?'+'+x2.sp:'—','#5df2ff');rr('Vitesse totale',f1(P.sp*(1+swBonus().sp)*(1+rlSp())),'#7affb2');rr('Sauts max',swBonus().inf?'∞':String(P.jm));y+=3;
 rr('Points de vie',nf(P.hp*20)+' / '+nf(P.max*20)+' PV','#ff4d6d');rr('Régénération',window.bxRgTxt?bxRgTxt():'+'+nf(P.rg*20)+' PV / salle');rr('Boucliers',P.sh+' / '+P.shm+' (max '+(window.BXC?BXC.shield.max:2)+')');rr('Bonus d’or','+'+Math.round((P.gm-1)*100)+'%','#ffd166');y+=3;
@@ -1753,7 +1753,7 @@ const hp=P.hp*20,mx=P.max*20;g.fillStyle='#300';g.fillRect(244,66,372,10);g.fill
 g.textAlign='left';let y=100;const X1=232,X2=432,Wc=196;let y1=y,y2=y;
 const a=(l,v,c)=>{stRow(l,v,X1,y1,Wc,c);y1+=22},d=(l,v,c)=>{stRow(l,v,X2,y2,Wc,c);y2+=22};
 a('Points de vie',nf(hp)+' / '+nf(mx),'#ff4d6d');a('Boucliers',P.sh+' / '+P.shm,'#5df2ff');a('Dégâts / coup',f1(P.dmg*b.dm*(1+swBonus().dm)*rlDm({})),'#7affb2');a('Critique (x2)',pc(Math.min(.75,P.cr+b.cr+rlCr()+(window.bnCr?bnCr():0))),'#ff9f1c');
-a('Cooldown',f1((P.wp=='staff'?nwCdf():P.rate*w.cd)*b.cd/60/(1+swBonus().as+rlAs()))+' s');a('Vampirisme',(pc(Math.min(.4,P.ls))+(P.ls>=.4?' (max)':'')));a('Dégât magique',x2&&x2.mg?'+'+x2.mg:'—');a('DPS actuel',f1(dpsNow()),'#ffd166');
+a('Cooldown',f1((P.wp=='staff'?nwCdf():P.rate*w.cd)*b.cd/60/(1+swBonus().as+rlAs()))+' s');a('Vol de vie (chance)',(pc(Math.min(.4,P.ls))+(P.ls>=.4?' (max)':'')));a('Dégât magique',x2&&x2.mg?'+'+x2.mg:'—');a('DPS actuel',f1(dpsNow()),'#ffd166');
 d('Vitesse',f1(P.sp*(1+swBonus().sp)*(1+rlSp())),'#5df2ff');d('Sauts max',swBonus().inf?'∞':String(P.jm));d('Régénération',window.bxRgTxt?bxRgTxt():'+'+nf(P.rg*20)+' PV/salle');d('Bonus d’or','+'+Math.round((P.gm-1)*100)+'%','#ffd166');
 d('Salle actuelle',String(lvl));d('Or','◆ '+nf(gold),'#ffd166');d('Monstres tués',nf(RS.k));d('Dégâts infligés',nf(RS.d));
 pmRel();g.textAlign='center';
@@ -2017,7 +2017,7 @@ const RL=[
 {id:'cape',fam:'spe',ic:'👻',n:'Cape Spectrale',d:'Invincibilité prolongée de 0,7 s après avoir été touché.',s:'+0,7 s d’invincibilité'},
 {id:'trail',fam:'spe',ic:'\uE0F2',n:'Sillage Fantôme',d:'Tu laisses une traînée spectrale qui blesse les ennemis.',s:'Traînée qui blesse'},
 {id:'cal',fam:'san',ic:'🩸',n:'Calice Écarlate',d:'Invoque une chauve-souris (ignorée des monstres) qui attaque à 10% de ton DPS actuel et te soigne de 5% des dégâts infligés.',s:'Chauve-souris alliée'},
-{id:'croc',fam:'san',ic:'🦇',n:'Croc de Nosferatu',d:'+15% de vol de vie (vampirisme total plafonné à 40%).',s:'+15% vol de vie'},
+{id:'croc',fam:'san',ic:'🦇',n:'Croc de Nosferatu',d:'+15% de chance de vol de vie à chaque attaque (chance totale plafonnée à 40%).',s:'+15% chance de vol de vie'},
 {id:'berz',fam:'ind',ic:'🍄',n:'Champignon Berzerk',d:'Sous 45% de PV : +35% de dégâts et +5% de vitesse d’attaque.',s:'<45% PV : +35% dég., +5% cadence'},
 {id:'pact',fam:'san',ic:'📜',n:'Pacte de Sang',d:'+35% de dégâts, mais tu subis +25% de dégâts.',s:'+35% dég., +25% subis'},
 {id:'heart',fam:'giv',ic:'💙',n:'Cœur de Glace',d:'Tes coups ralentissent les ennemis de 40%.',s:'Coups : ralentissement'},
@@ -4288,7 +4288,7 @@ function rectOverlap(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < 
   const RCOL = { ice: '#9fd0ff', crack: '#c9a46a', dash: '#5df2ff', dj: '#ffd166', bar: '#ff9f1c', key: '#ff4d6d' };
   const RLAB = { ice: 'GLACE · capacité de gel', crack: 'FISSURE · marteau ou feu', dash: 'IMPULSION', dj: 'DOUBLE SAUT', bar: 'VERROUILLÉ · ouvre de l’autre côté', key: 'SCELLÉE · clé du boss requise' };
   const KCOL = { boss: '#ff4d6d', treasure: '#ffb347', shop: '#5df2ff', rest: '#7affb2', tunnel: '#ff9f1c' };
-  let TC = null; const capOf = () => TC || (TC = {});
+  let TC = null; const capOf = () => { if (!TC) TC = {}; TC.dash = 1; return TC; };   // v97 : IMPULSION (dash) acquise dès le début de la partie (zone 1), sauvegarde et coop comprises
   let miniE = null, lairE = null, TPR = [];
   const hasPass = () => hasR('pass') || !!(window.NET && NET.other && NET.other.rl && NET.other.rl.includes('pass'));
   const reqLocked = (req, dir, st) => (req !== 'key' && st && st.doorsOpen && st.doorsOpen[dir]) ? false : (hasPass() && (req === 'crack' || req === 'ice' || req === 'dash' || req === 'dj')) ? false : req === 'key' ? !(world && world.keyGot) : req === 'dash' ? !capOf().dash : req === 'dj' ? (Math.max(P.jm || 1, (window.NET && NET.other && NET.other.jm) || 1) < 2 && !capOf().dj) : !st.doorsOpen[dir];
@@ -5339,7 +5339,7 @@ function allyAI(a){a.l--;if(a.hc>0)a.hc--;if(a.ac>0)a.ac--;if(a.sw>0)a.sw--;cons
 
 /* ---------- boucle (une fois par frame) ---------- */
 function hitE(b,pierce){for(const e of E){if(e.hp<=0||(b.h&&b.h.has(e)))continue;
-  if(b.x>e.x-b.r&&b.x<e.x+e.w+b.r&&b.y>e.y-b.r&&b.y<e.y+e.h+b.r){window.BNP=b.cc?0:1;try{hit(b.o,e,b.d,Math.sign(b.vx||1)*(b.kb||3))}finally{window.BNP=0}if(b.k=='fire'){e.burn=Math.max(e.burn||0,90);burst(b.x,b.y,'#ff9a3d',8)}
+  if(b.x>e.x-b.r&&b.x<e.x+e.w+b.r&&b.y>e.y-b.r&&b.y<e.y+e.h+b.r){window.BNP=b.cc?0:1;const l_=window.__lsNo;if(b.cc)window.__lsNo=1;try{hit(b.o,e,b.d,Math.sign(b.vx||1)*(b.kb||3))}finally{window.BNP=0;window.__lsNo=l_}if(b.k=='fire'){e.burn=Math.max(e.burn||0,90);burst(b.x,b.y,'#ff9a3d',8)}
    if(pierce){b.h.add(e);burst(b.x,b.y,'#fff',5)}else{b.dead=1;return true}}}return false}
 function boom(b){const o=b.o;NB.push({k:'zone',x:b.x,y:Math.min(b.y,RF-2),r:60,l:150,o,d:b.d,t:0});burst(b.x,b.y,'#b6ff4d',20);b.dead=1}
 function nwTick(){
@@ -5356,7 +5356,7 @@ function nwTick(){
   hitE(b,b.k=='bolt');
   if(!b.dead&&(b.x<-10||b.x>RW+10||b.y<-10||b.y>RF+10||(b.k!='bolt'&&WL.some(q=>b.x>q.x&&b.x<q.x+q.w&&b.y>q.y&&b.y<q.y+q.h))))b.dead=1}
  NB=NB.filter(b=>!b.dead&&b.l>0);
- for(const a of NA)allyAI(a);NA=NA.filter(a=>!a.dead);
+ {const l_=window.__lsNo;window.__lsNo=1;try{for(const a of NA)allyAI(a)}finally{window.__lsNo=l_}}NA=NA.filter(a=>!a.dead);
  if(window.KEYFX){const k=KEYFX;k.vy+=.25;k.y+=k.vy;if(k.y>RF-12){k.y=RF-12;k.vy=0}if(--k.l<=0)window.KEYFX=null}}
 const _upd=upd;upd=function(){window.NWP1=P;_upd();if(!(window.NET&&NET.role=='guest'))nwTick()};
 
@@ -9732,7 +9732,8 @@ const BXC = window.BXC = {
   },
   order: ['SS', 'S', 'A', 'B', 'C'],
   redCap: .25,                 // réduction des dégâts totale apportée par les bonus
-  lsCap: .40,                  // plafond du vol de vie (déjà appliqué par le moteur de dégâts)
+  lsCap: .40,                  // plafond de la CHANCE de vol de vie (v97 : P.ls = probabilité par attaque)
+  ls: { heal: .05 },           // v97 : soin fixe d’un vol de vie déclenché = 5 % des PV max (jamais au-delà du max)
   critCap: .75,                // plafond global des critiques (déjà appliqué par le moteur de dégâts)
   shield: {
     max: 5,                    // charges maximum
@@ -9753,6 +9754,8 @@ function shield(n) {
   const M = BXC.shield.max;
   P.shm = Math.min(M, (P.shm || 0) + n); P.sh = Math.min(M, (P.sh || 0) + n);
 }
+/* v97 : texte des bonus de vol de vie (la valeur est une CHANCE par attaque, pas un % des dégâts) */
+const lsTxt = n => 'À chaque attaque : +' + n + ' % de chance de déclencher un vol de vie qui rend ' + Math.round(BXC.ls.heal * 100) + ' % de tes PV max (chance totale plafonnée à ' + Math.round(BXC.lsCap * 100) + ' %).';
 const DEF = [
   ['atk1', 'B', 'Attaque +1', '+1 dégât', 'Augmente tes dégâts d’attaque de 1.', () => { P.dmg += 1; }],
   ['atk3', 'A', 'Attaque +3', '+3 dégâts', 'Augmente tes dégâts d’attaque de 3.', () => { P.dmg += 3; }],
@@ -9773,15 +9776,15 @@ const DEF = [
   ['prj3', 'A', 'Dégâts des projectiles +3 %', '+3 % projectiles', 'Flèches, boomerangs et tirs d’armes à projectiles : +3 % de dégâts. Sans effet sur la mêlée.', () => add('bxPrj', .03)],
   ['dj1', 'B', 'Double saut +1', '+1 saut aérien', 'Un saut supplémentaire en l’air.', () => { P.jm += 1; }],
   ['jh5', 'C', 'Hauteur de saut +5 %', '+5 % hauteur', 'Tes sauts montent 5 % plus haut.', () => add('bxJh', .05)],
-  ['ls1', 'SS', 'Vol de vie +1 %', '+1 % vol de vie', 'Te soigne de 1 % des dégâts réellement infligés (vol de vie total plafonné à 40 %).', () => { P.ls = (P.ls || 0) + .01; }],
+  ['ls3', 'SS', 'Vol de vie +3 %', '+3 % de chance', lsTxt(3), () => { P.ls = (P.ls || 0) + .03; }],
+  ['ls2', 'S', 'Vol de vie +2 %', '+2 % de chance', lsTxt(2), () => { P.ls = (P.ls || 0) + .02; }],
+  ['ls1', 'A', 'Vol de vie +1 %', '+1 % de chance', lsTxt(1), () => { P.ls = (P.ls || 0) + .01; }],
   ['kh3', 'C', 'Récupération après élimination +3', '+3 PV / élimination', 'Récupère 3 PV à chaque monstre éliminé (sans dépasser tes PV max).', () => add('bxKh', 3)],
   ['kh7', 'B', 'Récupération après élimination +7', '+7 PV / élimination', 'Récupère 7 PV à chaque monstre éliminé (sans dépasser tes PV max).', () => add('bxKh', 7)],
   ['cr1', 'B', 'Coups critiques +1 %', '+1 pt de critique', '+1 point de pourcentage de chance de coup critique.', () => { P.cr += .01; }],
   ['cr3', 'A', 'Coups critiques +3 %', '+3 pts de critique', '+3 points de pourcentage de chance de coup critique.', () => { P.cr += .03; }],
   ['cr5', 'S', 'Coups critiques +5 %', '+5 pts de critique', '+5 points de pourcentage de chance de coup critique.', () => { P.cr += .05; }],
-  ['sh1', 'B', 'Bouclier +1', '+1 charge', 'Ajoute 1 charge de bouclier (max 5). Une charge bloque un coup ; les charges se rechargent au début de chaque nouvelle salle.', () => shield(1)],
-  ['sh2', 'A', 'Bouclier +2', '+2 charges', 'Ajoute 2 charges de bouclier (max 5). Une charge bloque un coup ; les charges se rechargent au début de chaque nouvelle salle.', () => shield(2)],
-  ['sh3', 'S', 'Bouclier +3', '+3 charges', 'Ajoute 3 charges de bouclier (max 5). Une charge bloque un coup ; les charges se rechargent au début de chaque nouvelle salle.', () => shield(3)],
+  ['sh1', 'SS', 'Bouclier +1', '+1 charge', 'Ajoute 1 charge de bouclier (max 5). Une charge bloque un coup ; les charges se rechargent au début de chaque nouvelle salle.', () => shield(1)],   // v97 : seul bonus de bouclier (SS) ; versions S, A et B retirées
   ['rg3', 'C', 'Régénération par salle +3 %', '+3 % PV / salle', 'Récupère 3 % de tes PV max au début de chaque nouvelle salle.', () => add('bxRg', .03)],
   ['rg6', 'B', 'Régénération par salle +6 %', '+6 % PV / salle', 'Récupère 6 % de tes PV max au début de chaque nouvelle salle.', () => add('bxRg', .06)],
   ['rg10', 'A', 'Régénération par salle +10 %', '+10 % PV / salle', 'Récupère 10 % de tes PV max au début de chaque nouvelle salle.', () => add('bxRg', .10)]
@@ -9795,7 +9798,7 @@ function useful(b, p) {
   p = p || P; if (!p) return true;
   if (/^red/.test(b.bid)) return (p.bxRed || 0) < BXC.redCap - 1e-9;
   if (/^sh/.test(b.bid)) return (p.shm || 0) < BXC.shield.max || (p.sh || 0) < BXC.shield.max;
-  if (b.bid === 'ls1') return (p.ls || 0) < BXC.lsCap - 1e-9;
+  if (/^ls/.test(b.bid)) return (p.ls || 0) < BXC.lsCap - 1e-9;
   if (/^cr/.test(b.bid)) return (p.cr || 0) < BXC.critCap - 1e-9;
   return true;
 }
@@ -9840,6 +9843,42 @@ window.bxKill = function (e) {                                                  
   if (h > 0 && h * 20 >= 1) say('+' + Math.round(h * 20) + ' PV', p.x - 4, p.y - 28, '#7affb2');
   if (BXC.shield.regen === 'kills' && p.shm > 0 && p.sh < p.shm && (p.__bxKc = (p.__bxKc || 0) + 1) >= BXC.shield.kills) { p.__bxKc = 0; p.sh++; }
 };
+/* ---------------------------------------------------------------------------------------
+   v97 · VOL DE VIE = CHANCE PAR ATTAQUE
+   P.ls (bonus Vol de vie SS/S/A, Croc de Nosferatu, MiMi…) est désormais la PROBABILITÉ qu’une attaque déclenche
+   un vol de vie ; un vol de vie déclenché rend un soin FIXE = BXC.ls.heal × PV max (sans dépasser le max).
+   Appelé par dmgEO (coups normaux) à la place de l’ancien soin proportionnel aux dégâts.
+   · attaque admissible : même définition que les reliques v95 — coup direct porté pendant une attaque (p.at > 0)
+     ou par un projectile du joueur (BNP) ;
+   · exclus : loups / épines / tridents (__nrNA), bonus temporaires, reliques et maîtrises passives (wmTick),
+     salve de maîtrise (wmBurst), effets secondaires des armes exclusives (wmXA), effets d’attaque / d’impact /
+     d’élimination des reliques et bonus (rlAtk, rlHit, bfHit, rlKill, wmKill), invocations et leurs tirs (__lsNo) ;
+     les dégâts secondaires (bnPure) ne passent jamais par dmgEO ;
+   · UN SEUL tirage par attaque : clé = p.swc (compteur d’attaques de J1 / J2, celui des reliques v95). Les autres
+     coups de la même attaque (plusieurs ennemis, projectiles multiples, rayons, dégâts répétés) ne retirent pas ;
+   · le soin ne relance aucun effet (pas de boucle) ; J2 invité ne simule rien (l’hôte décide).
+   --------------------------------------------------------------------------------------- */
+const LSK = new WeakMap();                                       // joueur -> dernière clé d’attaque tirée (jamais sauvegardé)
+let lsBusy = 0;
+window.bxLs = function (e) {
+  const p = P; if (!p || !e || lsBusy || (window.NET && NET.role === 'guest')) return false;
+  const c = Math.min(BXC.lsCap, Math.max(0, p.ls || 0)); if (!(c > 0)) return false;
+  if (window.__nrNA || window.__lsNo || !(p.at > 0 || window.BNP)) return false;
+  const k = p.swc || 0; if (LSK.get(p) === k) return false;     // cette attaque a déjà eu son tirage
+  LSK.set(p, k);
+  if (!(Math.random() < c)) return false;
+  lsBusy = 1;
+  try {
+    const h = heal(p, p.max * BXC.ls.heal);
+    if (h > 0) { const v = Math.round(h * 20); if (v >= 1) say('VOL DE VIE +' + v + ' PV', p.x - 22, p.y - 32, '#ff7ab8'); burst(p.x + 9, p.y + 13, '#ff4d6d', 6); }
+  } finally { lsBusy = 0; }
+  return true;
+};
+for (const fn of ['wmTick', 'wmBurst', 'wmXA', 'rlAtk', 'rlHit', 'bfHit', 'rlKill', 'wmKill']) {
+  const f0 = window[fn]; if (typeof f0 !== 'function') continue;
+  window[fn] = function () { const s = window.__lsNo; window.__lsNo = 1; try { return f0.apply(this, arguments); } finally { window.__lsNo = s; } };
+}
+
 /* bouclier : la règle active est choisie dans BXC.shield.regen (une seule à la fois) */
 window.bxShRoom = () => BXC.shield.regen === 'room';
 { const t0 = rlTick; rlTick = function () {
