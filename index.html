@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>L’héritage de la MI</title>
 <style>
 :root{--bg:#07060f;--fg:#e8e6ff;--btn:rgba(120,110,255,.22);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -21,6 +21,9 @@ button:active{background:#8a7dff}
 #pad #stick,#pad #stick2{display:block;position:relative;width:116px;height:116px;border-radius:50%;border:2px solid #8a7dff;background:var(--btn);flex:none;touch-action:none}
 #knob,#knob2{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:#8a7dff;opacity:.85;pointer-events:none}
 #pad #stick2{border-color:#ff7ad9}#knob2{background:#ff7ad9}
+/* v100 : contrôles tactiles invisibles à deux zones — plus de joysticks affichés ; seuls les boutons d’action (E, dash) restent */
+#pad #stick,#pad #stick2,#stick,#stick2{display:none!important}#pad{justify-content:center}
+html,body,canvas{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}canvas{touch-action:none}
 </style></head><body>
 <div id="wrap"><canvas id="c" width="640" height="360"></canvas>
 <div id="pad"><div id="stick"><i id="knob"></i></div>
@@ -11175,6 +11178,69 @@ window.chBack = function (b, O, vx, vy, d) {
 /* bannière de type de salle (élite / piège / trésor) : sans objet dans les annexes, qui sont vidées de leurs monstres */
 { const r0 = roomO; roomO = function () { const n0 = TO.length; const r = r0.apply(this, arguments); try { if (akind()) for (let i = TO.length - 1; i >= n0; i--) if (/SALLE (ÉLITE|PIÈGE|AU TRÉSOR)/.test(String(TO[i] && TO[i].t))) TO.splice(i, 1); } catch (e) {} return r; }; }
 window.V99 = { akind, backOf, BK };
+})();
+</script>
+
+<script>
+/* =====================================================================================
+   v100 · L’Héritage de la MI — CONTRÔLES TACTILES INVISIBLES À DEUX ZONES (iPhone / Safari paysage)
+   -------------------------------------------------------------------------------------
+   · Moitié gauche de l’écran : joystick virtuel invisible → T.sx / T.sy (mêmes variables que l’ancien stick gauche :
+     déplacement, saut en glissant vers le haut, descente de plateforme vers le bas, vol analogique).
+   · Moitié droite : visée + attaque continue tant que le doigt est posé → T.ax / T.ay (mêmes variables que l’ancien
+     stick droit : A() et aimV() les lisent déjà). Doigt posé sans glisser = attaque devant soi.
+   · Le point de contact devient l’origine ; si le doigt s’éloigne trop, l’origine le suit (changement de sens immédiat).
+   · Multitouch : un identifiant de doigt par zone, indépendants. Relâcher / pointercancel / perte de focus /
+     rotation / sortie du jeu (menu, pause, coffre, récompense, boutique, carte, mort) → commande remise à zéro.
+   · Rien n’est dessiné (ni cercle, ni poignée, ni ligne de visée pendant la visée tactile).
+   · Souris, clavier et manette : inchangés (seuls les évènements pointerType « touch » / « pen » sont traités).
+   · Les boutons tactiles d’action conservés (E : interagir / réanimer, ⚡ : dash) et les zones cliquables du HUD
+     (pause, STATS, CARTE, minimap, invites « ramasser / boutique / porte ») restent prioritaires.
+   ===================================================================================== */
+(function () {
+'use strict';
+const Z = { L: null, R: null };                       // { id, ox, oy, x, y, moved, dead }
+const isTouch = e => e.pointerType === 'touch' || e.pointerType === 'pen';
+const radius = () => Math.max(34, Math.min(70, Math.min(innerWidth, innerHeight) * .13));
+function gameOn() { try { return !menu && !ps && stt == null && !shop && !choice && !dead && !window.MAPV && !(hm && menu); } catch (e) { return false; } }
+function uiTarget(t) { return !!(t && t.closest && t.closest('button,input,textarea,select,a,label,[contenteditable],#fsbtn,#gph')) && !(t.id === 'c'); }
+function canvasXY(e) { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H, e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom]; }
+const inR = (x, y, a, b, w, h) => x >= a && x <= a + w && y >= b && y <= b + h;
+function hudHit(e) { const [x, y, inside] = canvasXY(e); if (!inside) return false;
+  if (x > W - 118 && y > 26 && y < 58) return true;                              // pause / STATS
+  if (inR(x, y, W - 174, 28, 52, 22)) return true;                               // CARTE
+  try { const L = window.miniLay && miniLay(); if (L && inR(x, y, L.ox - 6, L.oy - 6, L.w + 12, L.h + 12)) return true; } catch (e2) {}
+  if (PU && inR(x, y, BX, BY, BW, BH)) return true; if (MN && mc && inR(x, y, BX, MY, BW, BH)) return true; if (DN && inR(x, y, BX, DY, BW, BH)) return true;
+  return false; }
+function clear(side) { const z = Z[side]; if (!z) return; Z[side] = null; if (side === 'L') { T.sx = 0; T.sy = 0; } else { T.ax = 0; T.ay = 0; } }
+function clearAll() { clear('L'); clear('R'); }
+function apply(side) { const z = Z[side]; if (!z || z.dead) return; const R = radius(); let dx = z.x - z.ox, dy = z.y - z.oy, d = Math.hypot(dx, dy);
+  const F = R * 1.25; if (d > F) { z.ox += dx * (1 - F / d); z.oy += dy * (1 - F / d); dx = z.x - z.ox; dy = z.y - z.oy; d = F; }   // l’origine suit le doigt
+  if (side === 'L') { const k = Math.min(1, d / R), n = d > 1e-3 ? 1 / d : 0; T.sx = dx * n * k; T.sy = dy * n * k; }
+  else { if (d > R * .18) z.moved = 1; let a; if (z.moved && d > 2) a = Math.atan2(dy, dx); else a = z.a != null ? z.a : ((P && P.face < 0) ? Math.PI : 0); z.a = a; T.ax = Math.cos(a); T.ay = Math.sin(a); } }
+addEventListener('pointerdown', e => { if (!isTouch(e)) return; if (uiTarget(e.target)) return;
+  if (!gameOn()) return;                                                         // menus, pause, coffres, récompenses… : gestion d’origine
+  if (hudHit(e)) return;
+  const side = e.clientX < innerWidth / 2 ? 'L' : 'R'; if (Z[side] && !Z[side].dead) { e.preventDefault(); e.stopImmediatePropagation(); return; }   // 2e doigt dans la même zone : ignoré
+  Z[side] = { id: e.pointerId, ox: e.clientX, oy: e.clientY, x: e.clientX, y: e.clientY, moved: 0, a: null, dead: 0 };
+  apply(side); e.preventDefault(); e.stopImmediatePropagation(); }, { capture: true, passive: false });
+addEventListener('pointermove', e => { if (!isTouch(e)) return; for (const s of ['L', 'R']) { const z = Z[s]; if (z && z.id === e.pointerId) { z.x = e.clientX; z.y = e.clientY; if (gameOn()) apply(s); e.preventDefault(); } } }, { capture: true, passive: false });
+const up = e => { for (const s of ['L', 'R']) { const z = Z[s]; if (z && z.id === e.pointerId) clear(s); } };
+['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => addEventListener(ev, e => { if (isTouch(e)) up(e); }, true));
+['blur', 'orientationchange', 'resize', 'pagehide'].forEach(ev => addEventListener(ev, clearAll));
+document.addEventListener('visibilitychange', () => { if (document.hidden) clearAll(); });
+if (screen.orientation && screen.orientation.addEventListener) screen.orientation.addEventListener('change', clearAll);
+/* sortie du jeu pendant qu’un doigt est posé : la commande est coupée et le doigt ignoré jusqu’à ce qu’il soit relevé */
+(function watch() { if (!gameOn()) for (const s of ['L', 'R']) { const z = Z[s]; if (z && !z.dead) { if (s === 'L') { T.sx = 0; T.sy = 0; } else { T.ax = 0; T.ay = 0; } z.dead = 1; } }
+  requestAnimationFrame(watch); })();
+/* Safari : pas de défilement, de zoom, de loupe ni de menu contextuel pendant la partie (les champs de saisie restent utilisables) */
+const keepUI = t => !!(t && t.closest && t.closest('input,textarea,select,[contenteditable]'));
+document.addEventListener('touchstart', e => { if (!uiTarget(e.target) && (gameOn() || e.target === cv)) e.preventDefault(); }, { passive: false });
+document.addEventListener('touchmove', e => { if (!keepUI(e.target)) e.preventDefault(); }, { passive: false });
+['gesturestart', 'gesturechange', 'gestureend', 'dblclick', 'contextmenu'].forEach(ev => document.addEventListener(ev, e => { if (!keepUI(e.target)) e.preventDefault(); }, { passive: false }));
+/* aucune ligne de visée tant que la visée vient du doigt */
+{ const d0 = drawAim; drawAim = function () { if (Z.R && !Z.R.dead) return; return d0.apply(this, arguments); }; }
+window.TOUCH2 = { Z, clearAll, gameOn, radius };
 })();
 </script>
 
