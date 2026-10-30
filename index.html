@@ -17,18 +17,15 @@ body.big #pad{display:none}body.big canvas{max-width:none;width:min(100vw,177.78
 button{width:68px;height:68px;border-radius:50%;border:2px solid #8a7dff;background:var(--btn);color:var(--fg);font-size:26px}
 button:active{background:#8a7dff}
 #ibtn{border-color:#7af0ff;font-weight:700;font-size:22px}
-@media (orientation:landscape) and (max-height:560px){canvas{width:min(100vw,177.78dvh);max-width:none}#pad{position:fixed;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);width:auto;max-width:none;padding:6px 14px;pointer-events:none;z-index:40}#pad>*{pointer-events:auto}#pad button{opacity:.7}#pad #stick,#pad #stick2{opacity:.7}}
-#pad #stick,#pad #stick2{display:block;position:relative;width:116px;height:116px;border-radius:50%;border:2px solid #8a7dff;background:var(--btn);flex:none;touch-action:none}
-#knob,#knob2{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:#8a7dff;opacity:.85;pointer-events:none}
-#pad #stick2{border-color:#ff7ad9}#knob2{background:#ff7ad9}
-/* v100 : contrôles tactiles invisibles à deux zones — plus de joysticks affichés ; seuls les boutons d’action (E, dash) restent */
-#pad #stick,#pad #stick2,#stick,#stick2{display:none!important}#pad{justify-content:center}
+@media (orientation:landscape) and (max-height:560px){canvas{width:min(100vw,177.78dvh);max-width:none}#pad{position:fixed;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);width:auto;max-width:none;padding:6px 14px;pointer-events:none;z-index:40}#pad>*{pointer-events:auto}#pad button{opacity:.7}}
+/* v101 : anciens joysticks supprimés (HTML, CSS et JS) — contrôles tactiles invisibles à deux zones (module v100) ; seuls les boutons d’action E et dash restent */
+#pad{justify-content:center}
 html,body,canvas{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}canvas{touch-action:none}
 </style></head><body>
 <div id="wrap"><canvas id="c" width="640" height="360"></canvas>
-<div id="pad"><div id="stick"><i id="knob"></i></div>
+<div id="pad">
 <div id="mid"><button id="ibtn" style="visibility:hidden">E</button><button id="dashbtn" data-k="dash" style="display:none">⚡</button></div>
-<div id="stick2"><i id="knob2"></i></div></div></div>
+</div></div>
 <script>
 const cv=document.getElementById('c'),g=cv.getContext('2d'),W=640,H=360,FY=320;let RW=640,RH=360,RF=320,cam={x:0,y:0};g.imageSmoothingEnabled=false;g.mozImageSmoothingEnabled=false;g.webkitImageSmoothingEnabled=false;g.msImageSmoothingEnabled=false;
 const keys={},PTR={x:0,y:0,on:0,d:0};let PU=null,MN=0;const BX=190,BY=262,BW=260,BH=38,MY=216;
@@ -38,13 +35,8 @@ const T={};document.querySelectorAll('button').forEach(b=>{const k=b.dataset.k;
 ['pointerdown'].forEach(ev=>b.addEventListener(ev,e=>{e.preventDefault();T[k]=1;if(dead)reset()}));
 ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>T[k]=0))});
 T.sx=T.sy=T.ax=T.ay=0;
-function mkStick(id,kx,ky){const st=document.getElementById(id),kn=st.firstElementChild;let sid=null;
-function mv(e){const r=st.getBoundingClientRect(),h=r.width/2,mx=h*.8;let dx=e.clientX-r.left-h,dy=e.clientY-r.top-h;const d=Math.hypot(dx,dy);if(d>mx){dx*=mx/d;dy*=mx/d}T[kx]=dx/mx;T[ky]=dy/mx;kn.style.transform='translate('+dx+'px,'+dy+'px)'}
-function end(e){if(e.pointerId!=sid)return;sid=null;T[kx]=T[ky]=0;kn.style.transform=''}
-st.addEventListener('pointerdown',e=>{e.preventDefault();sid=e.pointerId;st.setPointerCapture(e.pointerId);mv(e);if(dead)reset()});
-st.addEventListener('pointermove',e=>{if(e.pointerId==sid)mv(e)});
-['pointerup','pointercancel'].forEach(ev=>st.addEventListener(ev,end))}
-document.getElementById('ibtn').addEventListener('pointerdown',e=>{e.preventDefault();doInteract()});mkStick('stick','sx','sy');mkStick('stick2','ax','ay');
+/* v101 : ancien système de joysticks tactiles (mkStick, #stick / #stick2) supprimé — remplacé par les zones tactiles invisibles du module v100 (T.sx/T.sy, T.ax/T.ay) */
+document.getElementById('ibtn').addEventListener('pointerdown',e=>{e.preventDefault();doInteract()});
 const aimV=()=>{if(Math.hypot(T.ax,T.ay)>.4)return Math.atan2(T.ay,T.ax);if(PTR.on&&!dead){const dx=PTR.x+cam.x-(P.x+9),dy=PTR.y+cam.y-(P.y+13);if(Math.hypot(dx,dy)>6)return Math.atan2(dy,dx)}return null};
 const aimA=()=>{const q=aimV();return q!=null?q:(P.face>0?0:Math.PI)};
 const L=()=>keys.KeyA||keys.ArrowLeft||T.sx<-.35,R=()=>keys.KeyD||keys.ArrowRight||T.sx>.35,
@@ -11241,6 +11233,9 @@ document.addEventListener('touchmove', e => { if (!keepUI(e.target)) e.preventDe
 /* aucune ligne de visée tant que la visée vient du doigt */
 { const d0 = drawAim; drawAim = function () { if (Z.R && !Z.R.dead) return; return d0.apply(this, arguments); }; }
 window.TOUCH2 = { Z, clearAll, gameOn, radius };
+/* repère de version discret sur l’écran d’accueil : permet de vérifier que l’appareil charge bien ce fichier (et pas une copie en cache) */
+window.MI_VERSION = 'v101';
+{ const h0 = drawHome; drawHome = function () { const r = h0.apply(this, arguments); try { g.save(); g.font = '9px system-ui'; g.textAlign = 'right'; g.fillStyle = 'rgba(185,180,232,.55)'; g.fillText('v101 · tactile', W - 6, H - 5); g.restore(); } catch (e) {} return r; }; }
 })();
 </script>
 
