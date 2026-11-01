@@ -2049,7 +2049,7 @@ or:{n:'MERCENAIRE',c:'#ffd166',b:['Marchand −20%','+1% dég. par 20 ◆ (max 3
 ecl:{n:'ÉCLAIREUR',c:'#b28dff',b:['Portée +15% (toutes armes)','+1 projectile (arc, boomerang, bâton) · +20% portée (toutes armes)']},
 dlm:{n:'DIEU DL’MI',c:'#ff3df2',b:['+5% partout (dég., vie, cadence…)','+30% partout · +1 projectile · +1 invocation']},
 tnk:{n:'TANK',c:'#39ff88',b:['−10% dégâts subis · épines ×1,5','Forteresse : +0,5 s d’invincibilité après un coup']}};
-Object.defineProperty(window,'RMAX',{configurable:true,get(){try{return 9+((P&&P.swRs)|0)}catch(e){return 9}}});   /* v103 : total 6 panoplies (+1 Swag) + 3 indépendantes */RF2.ind={n:'INDÉPENDANTE',c:'#cfd8ff',b:[]};
+Object.defineProperty(window,'RMAX',{configurable:true,get(){return 9}});   /* v104 : 6 panoplies + 3 indépendantes, sans emplacement supplémentaire */RF2.ind={n:'INDÉPENDANTE',c:'#cfd8ff',b:[]};
 const RL=[
 {id:'mine',fam:'sap',ic:'💣',n:'Semelles Piégées',d:'Chaque saut laisse une mine au sol (5 max) qui explose au contact des ennemis.',s:'Chaque saut laisse une mine'},
 {id:'det',fam:'sap',ic:'🧨',n:'Détonateur',d:'Les ennemis tués explosent et blessent leurs voisins.',s:'Les ennemis tués explosent'},
@@ -2757,7 +2757,7 @@ each(26,(x,a)=>{c.strokeStyle='#05070f';c.lineWidth=2;c.beginPath();c.moveTo(x,0
 band(0,40,'106,215,255',.15,0);grain(500,'#cfeaff',.1)}
 else{c.fillStyle='rgba(6,2,20,.65)';c.fillRect(0,0,W,H);
 each(11,(x,a,b)=>{const w=26+a*16,h=200+b*120;c.fillStyle=lg(x,0,x+w,0,[[0,'#0c0620'],[.5,'#1b1240'],[1,'#080418']]);c.fillRect(x,FY-h,w,h);c.strokeStyle='rgba(138,125,255,.35)';c.strokeRect(x,FY-h,w,h);c.strokeStyle='rgba(255,61,242,.6)';c.shadowColor='#ff3df2';c.shadowBlur=8;c.beginPath();for(let k=0;k<5;k++){const yy=FY-h+20+k*(h/6);c.moveTo(x+4,yy);c.lineTo(x+w*.5,yy);c.lineTo(x+w*.5,yy+14);c.lineTo(x+w-4,yy+14)}c.stroke();c.shadowBlur=0});
-each(5,(x,a,b)=>{const R=40+a*34,y=70+b*160;c.strokeStyle='rgba(61,255,232,.55)';c.shadowColor='#3dffe8';c.shadowBlur=10;c.lineWidth=1.5;c.beginPath();c.arc(x,y,R,0,7);c.stroke();c.beginPath();c.arc(x,y,R*.7,0,7);c.stroke();c.beginPath();for(let k=0;k<5;k++){const q=-Math.PI/2+k*4*Math.PI/5;c.lineTo(x+Math.cos(q)*R*.7,y+Math.sin(q)*R*.7)}c.closePath();c.stroke();for(let k=0;k<12;k++){const q=k*Math.PI/6;c.fillStyle='rgba(61,255,232,.7)';c.fillRect(x+Math.cos(q)*R*.85-1,y+Math.sin(q)*R*.85-1,3,3)}c.shadowBlur=0});
+each(5,(x,a,b)=>{const R=40+a*34,y=70+b*160;c.strokeStyle='rgba(61,255,232,.55)';c.shadowColor='#3dffe8';c.shadowBlur=10;c.lineWidth=1.5;c.beginPath();c.arc(x,y,R,0,7);c.stroke();c.beginPath();c.arc(x,y,R*.7,0,7);c.stroke();c.beginPath();c.arc(x,y,R*.48,0,7);c.stroke();c.beginPath();c.moveTo(x-R*.32,y);c.lineTo(x+R*.32,y);c.moveTo(x,y-R*.32);c.lineTo(x,y+R*.32);c.stroke();for(let k=0;k<12;k++){const q=k*Math.PI/6;c.fillStyle='rgba(61,255,232,.7)';c.fillRect(x+Math.cos(q)*R*.85-1,y+Math.sin(q)*R*.85-1,3,3)}c.shadowBlur=0});
 each(9,(x,a,b)=>{const w=44+a*30,h=130+b*80;c.strokeStyle='rgba(138,125,255,.5)';c.lineWidth=5;c.beginPath();c.moveTo(x-w/2,FY);c.lineTo(x-w/2,FY-h);c.arc(x,FY-h,w/2,Math.PI,0);c.lineTo(x+w/2,FY);c.stroke();c.strokeStyle='rgba(255,61,242,.4)';c.lineWidth=1;c.stroke()});
 each(40,(x,a,b)=>{c.strokeStyle='rgba(138,125,255,.18)';c.lineWidth=1;c.beginPath();for(let k=0;k<6;k++){const q=k*Math.PI/3;c.lineTo(x+Math.cos(q)*10,b*FY+Math.sin(q)*10)}c.closePath();c.stroke()});
 each(26,(x,a,b)=>{const col=['#ff3df2','#3dffe8','#8a7dff'][r()*3|0];c.fillStyle=col;c.shadowColor=col;c.shadowBlur=10;c.globalAlpha=.7;c.fillRect(x,20+b*260,2,10+a*30);c.fillRect(x,20+b*260,6+a*14,2);c.globalAlpha=1;c.shadowBlur=0});
@@ -2780,7 +2780,7 @@ else if(z==4){g.fillStyle='#dff6ff';g.globalAlpha=.4;g.fillRect(q.x,(q.y+t*q.s*.
 g.restore()}
 
 /* ===== v7 : salles spéciales, élites, télégraphes, phases de boss, flèches ===== */
-function wmRoomType(){RT='norm';TRP=[];if(window.trapReset)trapReset();ZX=[];SEC=null;CH2=null;if(lvl<3||lvl%10==0)return;const r=Math.random();RT=r<.14&&lvl>=5?'elite':r<.28?'trap':r<.38?'tres':r<.48?'sec':'norm'}
+function wmRoomType(){RT='norm';TRP=[];if(window.trapReset)trapReset();ZX=[];SEC=null;CH2=null;if(lvl<3||lvl%10==0)return;const r=Math.random();RT=r<.07&&lvl>=5?'elite':r<.14?'trap':r<.20?'tres':r<.26?'sec':'norm'}
 function wmElite(e,i){if(lvl<4||(e.ty&&e.ty.civ))return;const el=RT=='elite'?i<Math.min(3,1+(lvl/15|0)):Math.random()<Math.min(.25,.04+lvl*.005);if(!el)return;const m=['rap','bli','exp'][rp(0,3)];e.el=m;e.hp*=m=='bli'?2.4:1.5;e.mhp=e.hp;if(m=='rap')e.sp*=1.5}
 function wmEliteDie(e){const n=window.bxGold?bxGold(2+lvl*.4,2):Math.max(2,Math.round((2+lvl*.4)*P.gm));(window.bnCoin||((e,n)=>{gold+=n}))(e,n);ST.gold+=n;say('ÉLITE +'+n+' ◆',e.x-10,e.y-24,'#ffd166');burst(e.x+e.w/2,e.y+e.h/2,'#ffd166',20);if(e.el=='exp')ZX.push({x:e.x+e.w/2,y:e.y+e.h/2,t:40,r:80})}
 function wmRoomSetup(){
@@ -4328,13 +4328,13 @@ function rectOverlap(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < 
 
   /* --- Capacités, salles secrètes, repos, mini-boss, raccourcis ------- */
   const CAPS = [['dash', 'IMPULSION', 'Maj / bouton ⚡ : élan rapide + esquive'], ['dj', 'DOUBLE SAUT', 'Un saut de plus en l’air']];
-  const RCOL = { ice: '#9fd0ff', crack: '#c9a46a', dash: '#5df2ff', dj: '#ffd166', bar: '#ff9f1c', key: '#ff4d6d' };
-  const RLAB = { ice: 'GLACE · capacité de gel', crack: 'FISSURE · marteau ou feu', dash: 'IMPULSION', dj: 'DOUBLE SAUT', bar: 'VERROUILLÉ · ouvre de l’autre côté', key: 'SCELLÉE · clé du boss requise' };
+  const RCOL = { crack: '#c9a46a', range: '#5df2ff', elem: '#ff9a5c', bar: '#ff9f1c', key: '#ff4d6d' };
+  const RLAB = { crack: 'FORCE · arme lourde ou attaque explosive', range: 'DISTANCE · toucher le mécanisme avec un projectile', elem: 'ÉLÉMENTAIRE · feu ou pouvoir élémentaire', bar: 'VERROUILLÉ · ouvre de l’autre côté', key: 'SCELLÉE · clé du boss requise' };
   const KCOL = { boss: '#ff4d6d', treasure: '#ffb347', shop: '#5df2ff', rest: '#7affb2', tunnel: '#ff9f1c' };
   let TC = null; const capOf = () => { if (!TC) TC = {}; TC.dash = 1; return TC; };   // v97 : IMPULSION (dash) acquise dès le début de la partie (zone 1), sauvegarde et coop comprises
   let miniE = null, lairE = null, TPR = [];
   const hasPass = () => hasR('pass') || !!(window.NET && NET.other && NET.other.rl && NET.other.rl.includes('pass'));
-  const reqLocked = (req, dir, st) => (req !== 'key' && st && st.doorsOpen && st.doorsOpen[dir]) ? false : (hasPass() && (req === 'crack' || req === 'ice' || req === 'dash' || req === 'dj')) ? false : req === 'key' ? !(world && world.keyGot) : req === 'dash' ? !capOf().dash : req === 'dj' ? (Math.max(P.jm || 1, (window.NET && NET.other && NET.other.jm) || 1) < 2 && !capOf().dj) : !st.doorsOpen[dir];
+  const reqLocked = (req, dir, st) => (req !== 'key' && st && st.doorsOpen && st.doorsOpen[dir]) ? false : (hasPass() && ['crack', 'range', 'elem'].includes(req)) ? false : req === 'key' ? !(world && world.keyGot) : !st.doorsOpen[dir];
   function addExtras(G, f, seed) {       // tout est optionnel : jamais sur le chemin du boss
     const rnd = mulberry32((seed ^ 0x5bd1e995) >>> 0), dist = new Map([[G.start.id, 0]]), q = [G.start];
     while (q.length) { const r = q.shift(); for (const d of Object.values(r.doors)) if (!dist.has(d.to)) { dist.set(d.to, dist.get(r.id) + 1); q.push(G.rooms.get(d.to)); } }
@@ -4349,25 +4349,25 @@ function rectOverlap(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < 
         const r = G._place(nx, ny, 1, 1, kind, rnd, seed); r.tier = h.tier; if (G._link(h, r, c, { x: nx, y: ny }, dir)) { r._pd = dir; return r; } return null; } return null; };
     const hosts = () => sh(all.filter(r => (r.kind === 'combat' || r.kind === 'start') && (!r.doors.P || !r.doors.O)));
     const hostsP = () => sh(all.filter(r => (r.kind === 'combat' || r.kind === 'start') && !r.doors.P));
-    const reqs = f > 1 ? ['crack', 'dash', 'dj', 'ice'] : ['crack', 'dj'];
+    const reqs = f > 1 ? ['crack', 'range', 'elem'] : ['crack', 'range'];
     const annex = () => sh([...G.rooms.values()].filter(r => (r.kind === 'rest' || r.kind === 'shop') && !r.doors.P));   // repli : un secret peut s'ouvrir sous le repos ou la boutique
     const secret = (req, lair) => { for (const h of hosts().concat(annex())) { const r = pocket(h, 'treasure'); if (r) { r.hidden = req; if (lair) r.lair = true; h.doors[r._pd].req = req; return r; } } return null; };
     const tunnel = () => { for (const a of hostsP()) {
       const far = all.filter(b => b.kind === 'combat' && !b.doors.O && dist.get(b.id) >= dist.get(a.id) + 3);
       if (!far.length) continue; const T = pocket(a, 'tunnel', true); if (!T) continue;
       const b = far[(rnd() * far.length) | 0]; G._link(b, T, b.cells()[0], { x: T.x, y: T.y }, 'O'); a.doors.P.req = 'bar'; return T; } return null; };
-    /* v99 : budget d'annexes = total visé (13 à 15, tiré de la seed) − salles de progression (8 à 10), entre 4 et 7.
-       Toujours : boutique, repos, une salle secrète, un repaire. Le reste du budget est tiré parmi les annexes
-       possibles de l'étage (tunnel dès la zone 2, salles secrètes supplémentaires, 2e repaire dès la zone 3). */
-    const prog = G.rooms.size, target = 13 + ((rnd() * 3) | 0), budget = Math.max(4, Math.min(7, target - prog));
+    /* v104 : annexes rares. Une boutique, un repos, un secret ou un repaire ne sont plus garantis à chaque étage. */
+    const ANNEX_RATES = { shop: .42, rest: .34, secret: .46, lair: .12, tunnel: .16, extra: .18 };
+    const budget = 1 + ((rnd() * 2) | 0); // 1 à 2 annexes additionnelles au maximum
     let made = 0;
-    if (hosts().some(h => dist.get(h.id) >= 2 && pocket(h, 'shop')) || hosts().some(h => dist.get(h.id) >= 1 && pocket(h, 'shop')) || hosts().some(h => pocket(h, 'shop'))) made++;   // boutique
-    if (hosts().some(h => dist.get(h.id) >= 1 && pocket(h, 'rest')) || hosts().some(h => pocket(h, 'rest'))) made++;                                                         // source de soin
-    if (secret('crack')) made++;                                                                                                                                              // salle secrète garantie
-    if (secret(f === 1 ? 'crack' : reqs[(rnd() * reqs.length) | 0], true)) made++;                                                                                         // repaire garanti
-    const pool = f === 1 ? ['secret', 'secret'] : f === 2 ? ['tunnel', 'secret', 'secret'] : ['tunnel', 'secret', 'lair'];
+    /* Le plafond s'applique à toutes les catégories, pas seulement aux ajouts de secours. */
+    if (made < budget && rnd() < ANNEX_RATES.shop && hosts().some(h => dist.get(h.id) >= 1 && pocket(h, 'shop'))) made++;
+    if (made < budget && rnd() < ANNEX_RATES.rest && hosts().some(h => dist.get(h.id) >= 1 && pocket(h, 'rest'))) made++;
+    if (made < budget && rnd() < ANNEX_RATES.secret && secret('crack')) made++;
+    if (made < budget && rnd() < ANNEX_RATES.lair && secret(reqs[(rnd() * reqs.length) | 0], true)) made++;
+    const pool = f === 1 ? ['secret'] : f === 2 ? ['tunnel', 'secret'] : ['tunnel', 'secret', 'lair'];
     for (let i = pool.length - 1; i > 0; i--) { const j = (rnd() * (i + 1)) | 0; [pool[i], pool[j]] = [pool[j], pool[i]]; }
-    for (const k of pool) { if (made >= budget) break;
+    if (rnd() < ANNEX_RATES.extra) for (const k of pool) { if (made >= budget) break;
       const r = k === 'tunnel' ? tunnel() : k === 'lair' ? secret(reqs[(rnd() * reqs.length) | 0], true) : secret(reqs[(rnd() * reqs.length) | 0]);
       if (r) made++; }
     G.annexBudget = budget; G.annexMade = made;
@@ -4419,19 +4419,22 @@ function rectOverlap(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < 
   const mine = (b, p) => b.o ? b.o === p : p === P;
   const projIn = (p, z, test) => { for (const l of [B, NB]) for (const b of l) { if (!b || b.dead || !mine(b, p) || !test(b)) continue; const r = b.r || 6; if (b.x > z.x - r && b.x < z.x + z.w + r && b.y > z.y - r && b.y < z.y + z.h + r) return true; } return false; };
   const beamIn = (p, z) => { const b = p && p.nwB; if (!b || b.k !== 'laser') return false; for (let d = 0; d <= b.L; d += 6) { const bx = b.x0 + b.c * d, by = b.y0 + b.s * d; if (bx > z.x && bx < z.x + z.w && by > z.y && by < z.y + z.h) return true; } return false; };
-  function crack(p, h) {                 // murs fissurés : marteau / lame infernale / boule de feu · portes de glace : capacité de gel
-    if (!world) return;
-    const st = world.stateOf(world.current), melee = h && (p.wp === 'ham' || (p.xw && p.xw.n === 'LAME INFERNALE')), ice = iceCap(p);
+  function crack(p, h) {                 // portes optionnelles : force, tir à distance ou élément déjà disponible
+    if (!world || !p) return;
+    const st = world.stateOf(world.current), heavy = p.wp === 'ham' || !!(p.xw && /MARTEAU|MASSE|LAME INFERNALE/i.test(p.xw.n || ''));
     for (const s of world.sensors) {
-      if (!s.locked || (s.req !== 'crack' && s.req !== 'ice')) continue;
-      const z = { x: s.rect.x - 34, y: s.rect.y - 24, w: s.rect.w + 68, h: s.rect.h + 48 }, hit = h && ov(h, z);
-      const fe = fireElem(p), ok = s.req === 'crack' ? ((melee && hit) || projIn(p, z, b => b.k === 'fire' || b.k === 'smoke' || b.fire || (p.bf && p.bf.fire && b.t === 'a')) || (fe && (hit || projIn(p, z, b => b.k !== 'zone') || beamIn(p, z))))
-                                   : (ice && (hit || projIn(p, z, b => b.k !== 'zone')));
+      if (!s.locked || !['crack', 'range', 'elem'].includes(s.req)) continue;
+      const z = { x: s.rect.x - 34, y: s.rect.y - 24, w: s.rect.w + 68, h: s.rect.h + 48 }, hit = !!(h && ov(h, z));
+      const fe = !!fireElem(p), ranged = projIn(p, z, b => b.t === 'a' || b.k === 'fire' || b.k === 'smoke' || b.k === 'zone' && b.fire || b.fire) || beamIn(p, z);
+      const elemental = fe && (hit || projIn(p, z, b => b.k === 'fire' || b.k === 'smoke' || b.fire || b.t === 'a') || beamIn(p, z));
+      const explosive = projIn(p, z, b => b.k === 'fire' || b.k === 'smoke' || b.fire || b.t === 'a' && fe);
+      const ok = s.req === 'crack' ? ((heavy && hit) || explosive || (fe && hit)) : s.req === 'range' ? ranged : elemental;
       if (!ok) continue;
       st.doorsOpen[s.dir] = true; s.locked = false;
-      if (s.req === 'ice') { burst(s.rect.x + 9, s.rect.y + 30, '#bff6ff', 30); say('GLACE BRISÉE !', p.x - 20, p.y - 24, '#9fd0ff'); }
-      else { burst(s.rect.x + 9, s.rect.y + 30, '#c9a46a', 30); say('MUR BRISÉ !', p.x - 20, p.y - 24, '#c9a46a'); }
-      shk = Math.max(shk, 8);
+      const col = s.req === 'elem' ? '#ff9a5c' : s.req === 'range' ? '#5df2ff' : '#c9a46a';
+      burst(s.rect.x + 9, s.rect.y + 30, col, 30);
+      say(s.req === 'elem' ? 'MÉCANISME ACTIVÉ !' : s.req === 'range' ? 'MÉCANISME TOUCHÉ !' : 'OBSTACLE BRISÉ !', p.x - 28, p.y - 24, col);
+      shk = Math.max(shk, 6);
     }
   }
   function rest(p, key) {                // source de soin : une fois par joueur et par salle
@@ -4468,6 +4471,12 @@ function rectOverlap(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < 
     if (!CUR || CUR.kind === 'boss') return;
     if (CUR.w > 1) RW = Math.round(RW * CUR.w * 0.85 / 16) * 16;
     if (CUR.h > 1) { RH = Math.round(RH * (1 + (CUR.h - 1) * 0.3)); RF = RH - 40; GY = RF; }
+    /* Les annexes utilisent une vraie échelle compacte, indépendante des salles de combat. */
+    if (CUR.kind === 'shop') { RW = 544; RH = 360; }
+    else if (CUR.kind === 'rest') { RW = 496; RH = 344; }
+    else if (CUR.kind === 'treasure') { RW = CUR.lair ? 592 : 560; RH = CUR.lair ? 392 : 368; }
+    else if (CUR.kind === 'tunnel') { RW = 592; RH = 368; }
+    RF = RH - 40; GY = RF;
   };
 
   /* --- 2. Hooks du coordinateur --------------------------------------- */
@@ -5893,7 +5902,7 @@ function poll(){
  let gps=[];try{gps=navigator.getGamepads?navigator.getGamepads():[]}catch(e){gps=[]}let p=null;for(const x of gps)if(x&&x.connected){p=x;break}
  if(!p){if(conn){conn=0;relAll();T.ax=T.ay=0;rs=0;if(sd){T.sy=0;sd=0}lay();hint.style.display='none'}requestAnimationFrame(poll);return}
  if(!conn){conn=1;t0=performance.now();lay()}
- const raw=i=>!!(p.buttons[i]&&p.buttons[i].pressed),b=i=>!lock[i]&&raw(i),dz=i=>Math.abs(p.axes[i]||0)>.22?p.axes[i]:0;
+ const raw=i=>!!(p.buttons[i]&&p.buttons[i].pressed),b=i=>!lock[i]&&raw(i),dz=i=>{const v=Math.max(-1,Math.min(1,+p.axes[i]||0)),a=Math.abs(v);return a<=.18?0:Math.sign(v)*Math.min(1,(a-.18)/.82)};
  const lx=dz(0),ly=dz(1),rx=dz(2),ry=dz(3),m=mode();if(lx||ly||rx||ry||p.buttons.some(q=>q&&q.pressed))window.__padUse=true;
  if(m!==mode0){relAll();if(sd){T.sy=0;sd=0}mode0=m;for(let i=0;i<18;i++)if(raw(i))lock[i]=1}
  for(const i in lock)if(!raw(i))delete lock[i];
@@ -5905,7 +5914,7 @@ function poll(){
   const vtc=(typeof FLY!=='undefined'&&FLY)||Math.abs(ly)>=Math.abs(lx)*1.19;hold('ArrowUp',(ly<-.65&&vtc)||b(12));{const dn=(ly>.65&&vtc)||b(13);hold('ArrowDown',dn);if(dn){T.sy=1;sd=1}else if(sd){T.sy=0;sd=0}}hold('Space',b(0));
   hold('KeyJ',b(2)||b(7)||b(5));hold('KeyL',b(1)||b(6)||b(4));hold('KeyE',b(3));
   if(pr(9))tap('Escape');if(pr(8))tap('Tab');if(pr(11))toggleFS();if(pr(10))tap('KeyM');
-  if(Math.hypot(rx,ry)>.35){T.ax=rx;T.ay=ry;rs=1}else if(rs){T.ax=T.ay=0;rs=0}
+  if(Math.hypot(rx,ry)>.28){const m0=Math.hypot(rx,ry),k0=Math.min(1,m0);T.ax=rx/m0*k0;T.ay=ry/m0*k0;rs=1}else if(rs){T.ax=T.ay=0;rs=0}
  }else{
   if(rs){T.ax=T.ay=0;rs=0}
   if(m==='map'){if(e('L')||e('U'))tap('ArrowLeft');if(e('R')||e('D'))tap('ArrowRight');if(pr(0))tap('Enter');if(pr(1)||pr(9)||pr(10))tap('Escape')}
@@ -8301,7 +8310,7 @@ const _wW=wmWallsDraw;wmWallsDraw=function(){const r=_wW.apply(this,arguments);i
 const _wF=wmFG;wmFG=function(z){const r=_wF.apply(this,arguments);if(isArena()){try{const c=arC(),t=tick,ox=-(cam.x|0),oy=-(cam.y|0),X=ox+RW/2,Y=oy+RF-150;g.save();
  g.globalAlpha=.16;g.strokeStyle=c.l;g.lineWidth=2;g.beginPath();g.arc(X,Y,74,0,7);g.stroke();g.beginPath();g.arc(X,Y,58,0,7);g.stroke();
  for(let i=0;i<12;i++){const a=i/12*6.283+t*.004;g.beginPath();g.moveTo(X+Math.cos(a)*58,Y+Math.sin(a)*58);g.lineTo(X+Math.cos(a)*74,Y+Math.sin(a)*74);g.stroke()}
- g.beginPath();for(let i=0;i<5;i++){const a=-Math.PI/2+i*4*Math.PI/5-t*.002;g[i?'lineTo':'moveTo'](X+Math.cos(a)*54,Y+Math.sin(a)*54)}g.closePath();g.stroke();g.globalAlpha=1;
+ g.beginPath();g.arc(X,Y,45,0,Math.PI*2);g.stroke();g.beginPath();g.moveTo(X-30,Y);g.lineTo(X+30,Y);g.moveTo(X,Y-30);g.lineTo(X,Y+30);g.stroke();g.globalAlpha=1;
  for(const fx of[.22,.78]){const x=ox+RW*fx,L=56+Math.sin(t*.02+fx*9)*3;g.strokeStyle='rgba(20,18,30,.9)';g.lineWidth=2;g.setLineDash([4,3]);g.beginPath();g.moveTo(x,oy);g.lineTo(x,oy+L);g.stroke();g.setLineDash([]);
   g.fillStyle='#16131f';g.fillRect(x-6,oy+L,12,14);g.save();g.globalCompositeOperation='lighter';const q=g.createRadialGradient(x,oy+L+7,1,x,oy+L+7,30);q.addColorStop(0,'rgba(255,214,140,.5)');q.addColorStop(1,'rgba(255,160,60,0)');g.fillStyle=q;g.fillRect(x-30,oy+L-23,60,60);g.restore();g.fillStyle='#ffd88a';g.fillRect(x-3,oy+L+3,6,7)}
  g.restore()}catch(e){}}return r};
@@ -10249,7 +10258,8 @@ function hidBack() {                                                            
     g.fillStyle = 'rgba(0,0,0,.4)'; for (let y = 70; y < RF; y += 22) g.fillRect(px - 16, y, 32, 2); g.fillStyle = rgba(lc, .14 + .06 * Math.sin(t * .05 + px)); g.fillRect(px - 2, 80, 4, RF - 120); }
   g.strokeStyle = rgba(lc, .22 + .1 * Math.sin(t * .04)); g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, 44, 0, TAU); g.stroke(); g.lineWidth = 1; g.beginPath(); g.arc(cx, cy, 34, 0, TAU); g.stroke();
   for (let i = 0; i < 12; i++) { const a = i / 12 * TAU + t * .004; g.fillStyle = rgba(lc, .3 + .2 * Math.sin(t * .06 + i)); g.fillRect(cx + Math.cos(a) * 39 - 1.5, cy + Math.sin(a) * 39 - 1.5, 3, 3); }
-  g.beginPath(); for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * TAU * 2 / 5; i ? g.lineTo(cx + Math.cos(a) * 30, cy + Math.sin(a) * 30) : g.moveTo(cx + Math.cos(a) * 30, cy + Math.sin(a) * 30); } g.closePath(); g.strokeStyle = rgba(lc, .16); g.stroke();
+  /* Pentagramme supprimé : pentagone runique simple, sans entrelacement d'étoile. */
+  g.beginPath(); for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * TAU / 5; i ? g.lineTo(cx + Math.cos(a) * 30, cy + Math.sin(a) * 30) : g.moveTo(cx + Math.cos(a) * 30, cy + Math.sin(a) * 30); } g.closePath(); g.strokeStyle = rgba(lc, .16); g.stroke();
   g.restore(); }
 function mkFront(id) { const SIDE = 120, c = cvs(RW + SIDE * 2, RH + 40), x = c.getContext('2d'), r = rng(String(id).split('').reduce((a, ch) => a * 31 + ch.charCodeAt(0) | 0, 7)), lc = zCol();
   x.translate(SIDE, 0);
@@ -11333,6 +11343,7 @@ addEventListener('pointerdown', e => { if (!isTouch(e)) return; if (uiTarget(e.t
   if (hudHit(e)) return;
   const side = e.clientX < innerWidth / 2 ? 'L' : 'R';   /* v103 : le dernier doigt posé dans une zone la reprend (plus de commande bloquée) */
   Z[side] = { id: e.pointerId, ox: e.clientX, oy: e.clientY, x: e.clientX, y: e.clientY, moved: 0, a: null, dead: 0 };
+  try { const target = e.target && e.target.setPointerCapture ? e.target : cv; if (target && target.setPointerCapture) target.setPointerCapture(e.pointerId); } catch (_) {}
   apply(side); e.preventDefault(); e.stopImmediatePropagation(); }, { capture: true, passive: false });
 addEventListener('pointermove', e => { if (!isTouch(e)) return; for (const s of ['L', 'R']) { const z = Z[s]; if (z && z.id === e.pointerId) { z.x = e.clientX; z.y = e.clientY; if (gameOn()) apply(s); e.preventDefault(); } } }, { capture: true, passive: false });
 const up = e => { for (const s of ['L', 'R']) { const z = Z[s]; if (z && z.id === e.pointerId) clear(s); } };
@@ -11352,8 +11363,8 @@ document.addEventListener('touchmove', e => { if (!keepUI(e.target)) e.preventDe
 { const d0 = drawAim; drawAim = function () { if (Z.R && !Z.R.dead) return; return d0.apply(this, arguments); }; }
 window.TOUCH2 = { Z, clearAll, gameOn, radius };
 /* repère de version discret sur l’écran d’accueil : permet de vérifier que l’appareil charge bien ce fichier (et pas une copie en cache) */
-window.MI_VERSION = 'v103';
-{ const h0 = drawHome; drawHome = function () { const r = h0.apply(this, arguments); try { g.save(); g.font = '9px system-ui'; g.textAlign = 'right'; g.fillStyle = 'rgba(185,180,232,.55)'; g.fillText('v103 · tactile', W - 6, H - 5); g.restore(); } catch (e) {} return r; }; }
+window.MI_VERSION = 'v104';
+{ const h0 = drawHome; drawHome = function () { const r = h0.apply(this, arguments); try { g.save(); g.font = '9px system-ui'; g.textAlign = 'right'; g.fillStyle = 'rgba(185,180,232,.55)'; g.fillText('v104 · salles & reliques', W - 6, H - 5); g.restore(); } catch (e) {} return r; }; }
 })();
 </script>
 
@@ -12656,7 +12667,7 @@ const J1C = '#ff7ad9', J2C = '#7af0ff';
 
 /* =============================== 1 · RELIQUES =============================== */
 const rlCat = id => (RLI[id] && RLI[id].fam === 'ind') ? 'ind' : 'set';
-const rlCap = (cat, p) => { p = p || P; return cat === 'ind' ? 3 : 6 + ((p && p.swRs) | 0); };
+const rlCap = cat => cat === 'ind' ? 3 : 6; // limite stricte : 6 panoplies + 3 indépendantes
 const rlCnt = (cat, p) => { p = p || P; return ((p && p.rl) || []).filter(id => RLI[id] && rlCat(id) === cat).length; };
 window.rlCat = rlCat; window.rlCap = rlCap; window.rlCnt = rlCnt;
 window.rlHasRoom = (id, p) => rlCnt(rlCat(id), p) < rlCap(rlCat(id), p);
@@ -12892,6 +12903,226 @@ try { const w = NWL.find(x => x.nw === 'invoc'); if (w) w.d = 'Invoque 1 à 10 m
 
 { const d0 = draw; draw = function () { const r = d0.apply(this, arguments); try { lowVignette(); } catch (e) {} return r; }; }
 window.V103 = { rlCat, rlCap, rlCnt, pool, gen, pair, isThreat };
+})();
+</script>
+
+
+<script>
+/* =====================================================================================
+   v104 · ARCHITECTURE DES SALLES · ARÈNES DE BOSS DISTINCTES · DÉCORS DESTRUCTIBLES
+   Module additionnel non destructif : les propriétés de combat (PV, vitesse, dégâts,
+   trajectoires et hitboxes des entités) ne sont pas modifiées.
+   ===================================================================================== */
+(function () {
+  'use strict';
+  const nodeNow = () => { try { return window.WORLD && WORLD.current || null; } catch (_) { return null; } };
+  const roomKind = () => { const n = nodeNow(); if (!n) return null; if (n.hidden) return n.lair ? 'lair' : 'secret'; return n.kind || null; };
+  const isAnnex = () => ['shop', 'rest', 'treasure', 'tunnel', 'secret'].includes(roomKind());
+  const isBoss = () => lvl % 10 === 0 && RW < W;
+
+  /* Géométrie des salles : les plateformes libres aléatoires sont remplacées par des
+     avancées latérales raccordées à la structure et par des niches basses. */
+  const _plats104 = wmPlats;
+  wmPlats = function () {
+    const out = _plats104.apply(this, arguments) || [];
+    if (isAnnex()) return [{ x: 0, y: GY, w: RW }];
+    return out.filter(p => !p.fl); // retire les petits blocs sans support ajoutés au hasard
+  };
+
+  const _walls104 = wmWalls;
+  wmWalls = function () {
+    const r = _walls104.apply(this, arguments);
+    if (isAnnex()) {
+      /* Les boutiques, sources, tunnels et trésors sont des pièces compactes et dégagées. */
+      WL = [];
+      plats = [{ x: 0, y: GY, w: RW }];
+      return r;
+    }
+    if (isBoss() || lvl === 1 || lvl % 10 === 0) return r;
+    try {
+      const k = Math.max(2, (DSC && DSC.K) | 0), step = 62;
+      const leftW = Math.min(164, Math.max(124, Math.round(RW * .18)));
+      const leftY = Math.min(RF - 74, GY + 58);
+      const rightW = Math.min(224, Math.max(168, Math.round(RW * .20)));
+      const rightY = Math.max(GY + 10, GY + step * (k - 1) - 54);
+      const left = { x: 0, y: leftY, w: leftW, arch: 'L' };
+      const right = { x: RW - rightW, y: rightY, w: rightW, arch: 'R' };
+      if (!plats.some(p => p.x === left.x && p.y === left.y)) plats.push(left);
+      if (!plats.some(p => Math.abs(p.x - right.x) < 10 && Math.abs(p.y - right.y) < 10)) plats.push(right);
+      /* Contreforts courts et linteaux : ils soutiennent visuellement les avancées sans
+         fermer les accès au sol ni condamner une sortie. */
+      WL.push({ x: Math.max(12, leftW - 16), y: leftY + 10, w: 12, h: 38, d: 1 });
+      WL.push({ x: RW - rightW + 5, y: rightY + 10, w: 12, h: 38, d: 1 });
+      WL.push({ x: 0, y: Math.max(24, leftY - 76), w: Math.max(52, leftW - 24), h: 12, d: 1 });
+      WL.push({ x: RW - rightW + 24, y: Math.max(24, rightY - 76), w: Math.max(52, rightW - 24), h: 12, d: 1 });
+    } catch (e) { console.warn('[v104] architecture de salle', e); }
+    return r;
+  };
+
+  /* Habillage pixel-art différent pour les neuf boss. Décor uniquement : aucune collision
+     ajoutée, aucun déplacement ni paramètre d'attaque modifié. */
+  function drawBossArchitecture() {
+    if (!isBoss()) return;
+    const z = (((lvl / 10) | 0) - 1 + 90) % 9, mid = RW / 2, c = th.l || '#8a7dff', t = tick;
+    const rect = (x, y, w, h, fill, stroke) => {
+      g.fillStyle = fill; g.fillRect(x, y, w, h);
+      if (stroke) { g.strokeStyle = stroke; g.lineWidth = 1; g.strokeRect(x + .5, y + .5, w - 1, h - 1); }
+    };
+    g.save(); g.globalAlpha = .72;
+    switch (z) {
+      case 0: // Les Frères Rom : parc urbain, grilles et bancs de pierre.
+        for (const x of [22, RW - 118]) { rect(x, 62, 96, 5, '#1b2930', c); for (let i = 0; i < 8; i++) rect(x + 6 + i * 12, 38, 3, 24, '#293b43', '#8fd0a8'); rect(x - 4, 86, 104, 8, '#24332e', '#8fd0a8'); }
+        rect(mid - 42, 44, 84, 9, '#17242a', '#8fd0a8'); rect(mid - 34, 53, 68, 5, '#34433b');
+        for (let i = 0; i < 5; i++) rect(mid - 30 + i * 15, 57, 4, 22, '#25352e');
+        break;
+      case 1: // Roi Coco : poutres de jungle et gousses suspendues.
+        for (const x of [35, RW - 45]) { rect(x, 22, 10, 130, '#1e3826', '#6fc36a'); for (let i = 0; i < 4; i++) { g.fillStyle = '#4c9b4c'; g.fillRect(x - 16 + (i % 2) * 7, 35 + i * 24 + Math.sin(t * .04 + i) * 2, 25, 5); } }
+        for (const x of [105, RW - 105]) { g.fillStyle = '#78512c'; g.fillRect(x - 10, 32, 20, 34); g.fillStyle = '#ad8245'; g.fillRect(x - 7, 26, 14, 8); g.fillStyle = '#d5a85a'; g.fillRect(x - 3, 39, 6, 14); }
+        rect(mid - 64, 30, 128, 8, '#263c26', '#8aca69');
+        break;
+      case 2: // Evil Flöz : laboratoire, cuves, conduites et manomètres.
+        for (const x of [32, RW - 78]) { rect(x, 54, 46, 92, '#142b29', '#9dff5d'); rect(x + 5, 62, 36, 72, 'rgba(90,255,110,.13)', '#4d8c5d'); rect(x + 8, 100 + Math.sin(t * .08) * 4, 30, 4, '#9dff5d'); g.strokeStyle = '#a6d8b4'; g.beginPath(); g.arc(x + 23, 47, 13, Math.PI, 0); g.stroke(); }
+        rect(95, 36, RW - 190, 5, '#263c35', '#9dff5d'); rect(95, 36, 5, 25, '#263c35'); rect(RW - 100, 36, 5, 25, '#263c35');
+        break;
+      case 3: // King Lil Tim : salle du trône néon et couronne pixel.
+        rect(mid - 74, 38, 148, 7, '#17172c', '#8a7dff'); rect(mid - 60, 45, 120, 48, '#141329', '#8a7dff'); rect(mid - 38, 60, 76, 30, '#242048', '#b8a9ff');
+        g.fillStyle = '#ffd166'; g.beginPath(); g.moveTo(mid - 28, 55); g.lineTo(mid - 20, 34); g.lineTo(mid - 6, 49); g.lineTo(mid + 3, 28); g.lineTo(mid + 16, 49); g.lineTo(mid + 28, 35); g.lineTo(mid + 30, 56); g.closePath(); g.fill();
+        for (const x of [28, RW - 38]) { rect(x, 76, 10, 86, '#242044', '#8a7dff'); rect(x - 5, 68, 20, 8, '#39306e', '#c4b8ff'); }
+        break;
+      case 4: // Yéti colossal : stalactites et contreforts de glace.
+        for (let i = 0; i < 7; i++) { const x = 18 + i * (RW - 36) / 6, h = 22 + (i % 3) * 13; g.fillStyle = '#b7efff'; g.beginPath(); g.moveTo(x - 8, 22); g.lineTo(x + 8, 22); g.lineTo(x + Math.sin(t * .02 + i) * 2, 22 + h); g.closePath(); g.fill(); }
+        for (const x of [32, RW - 58]) { rect(x, 92, 26, 66, '#17415e', '#7af0ff'); rect(x + 5, 102, 16, 46, '#2a6b8a'); }
+        break;
+      case 5: // Le Diable : forge, nervures infernales et évents incandescents.
+        for (const x of [30, 85, RW - 85, RW - 30]) { rect(x, 30, 9, 138, '#35150e', '#ff7a3d'); rect(x - 5, 28, 19, 7, '#592217', '#ff9d59'); }
+        for (const x of [62, RW - 62]) { rect(x - 13, RF - 34, 26, 16, '#32110b', '#ff7a3d'); g.fillStyle = '#ff8a3d'; g.fillRect(x - 5, RF - 31, 10, 5 + Math.sin(t * .2) * 2); }
+        break;
+      case 6: // Kraken abyssal : hublots et tentacules sur les côtés.
+        for (const x of [42, RW - 42]) { g.strokeStyle = '#3d9ab0'; g.lineWidth = 5; g.beginPath(); g.arc(x, 92, 28, .2, Math.PI * 1.8); g.stroke(); g.lineWidth = 2; g.strokeStyle = '#b6f6ff'; g.beginPath(); g.arc(x, 92, 19, 0, Math.PI * 2); g.stroke(); }
+        for (const side of [0, 1]) { const x = side ? RW - 16 : 16; g.strokeStyle = '#256b80'; g.lineWidth = 8; g.beginPath(); g.moveTo(x, RF - 4); g.bezierCurveTo(x + (side ? -70 : 70), RF - 80, x + (side ? -42 : 42), 145, x + (side ? -4 : 4), 86); g.stroke(); }
+        break;
+      case 7: // Anubis : tombeau, colonnes à bandeaux et linteau.
+        for (const x of [42, 86, RW - 86, RW - 42]) { rect(x, 34, 14, 126, '#4d402d', '#d8b56e'); for (let y = 42; y < 154; y += 24) rect(x - 2, y, 18, 4, '#8c7244'); rect(x - 4, 28, 22, 8, '#9d824b'); }
+        rect(108, 26, RW - 216, 9, '#493923', '#d8b56e');
+        break;
+      default: // Roi Spectre : arche funéraire, éclats et runes suspendues.
+        g.strokeStyle = '#b28dff'; g.lineWidth = 5; g.beginPath(); g.moveTo(40, 164); g.lineTo(40, 78); g.quadraticCurveTo(40, 26, mid, 26); g.quadraticCurveTo(RW - 40, 26, RW - 40, 78); g.lineTo(RW - 40, 164); g.stroke();
+        for (let i = 0; i < 8; i++) { const x = 70 + i * (RW - 140) / 7, y = 64 + Math.sin(t * .035 + i) * 6; g.fillStyle = '#c9b8ff'; g.beginPath(); g.moveTo(x, y - 7); g.lineTo(x + 5, y); g.lineTo(x, y + 7); g.lineTo(x - 5, y); g.closePath(); g.fill(); }
+        break;
+    }
+    g.restore();
+  }
+
+  /* Décors destructibles pixel-art. Ils sont non bloquants par conception : un objet ne
+     peut donc jamais condamner une porte, un point de spawn ou un passage obligatoire. */
+  let props = [];
+  let propId = 0;
+  const hit = (a, b) => !!(a && b && a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y);
+  function initProps() {
+    const n = nodeNow(), kind = roomKind();
+    props = [];
+    if (!n || kind !== 'combat' || lvl % 10 === 0 || lvl === 1) return;
+    if (Array.isArray(n._miDecorProps)) { props = n._miDecorProps; return; }
+    const surfaces = (plats || []).filter(p => p && p.w >= 100).slice();
+    const count = 1 + ((Math.random() * 3) | 0);
+    for (let i = 0; i < count && surfaces.length; i++) {
+      for (let tries = 0; tries < 18; tries++) {
+        const p = surfaces[(Math.random() * surfaces.length) | 0], type = ['crate', 'barrel', 'jar', 'crystal', 'rock'][(Math.random() * 5) | 0];
+        const dims = type === 'barrel' ? [18, 24, 2] : type === 'jar' ? [15, 19, 1] : type === 'crystal' ? [19, 27, 2] : type === 'rock' ? [24, 15, 2] : [25, 21, 3];
+        const [w, h, hp] = dims, x = Math.round(p.x + 10 + Math.random() * Math.max(1, p.w - w - 20)), y = p.y - h;
+        if (x < 74 || x + w > RW - 72) continue; // réserve les zones proches des portes
+        const box = { x, y, w, h };
+        if (props.some(q => hit(box, q)) || (WL || []).some(q => hit(box, q))) continue;
+        props.push({ id: ++propId, x, y, w, h, hp, max: hp, type, gone: false, lastHit: new WeakMap(), color: type === 'crystal' ? '#9df4ff' : type === 'rock' ? '#9b91a3' : type === 'jar' ? '#c78b5b' : type === 'barrel' ? '#b47a43' : '#bd8751' });
+        break;
+      }
+    }
+    n._miDecorProps = props;
+  }
+
+  const _wallsDraw104 = wmWallsDraw;
+  wmWallsDraw = function () {
+    const r = _wallsDraw104.apply(this, arguments);
+    try {
+      if (isBoss()) { drawBossArchitecture(); return r; }
+      for (const p of props) {
+        if (p.gone) continue;
+        const x = Math.round(p.x), y = Math.round(p.y), w = p.w, h = p.h;
+        g.save();
+        if (p.type === 'crate') {
+          g.fillStyle = '#6f452b'; g.fillRect(x, y, w, h); g.fillStyle = '#c18b51'; g.fillRect(x + 2, y + 2, w - 4, 3); g.fillRect(x + 2, y + h - 4, w - 4, 2);
+          g.strokeStyle = '#3b261e'; g.lineWidth = 2; g.strokeRect(x + 1, y + 1, w - 2, h - 2); g.beginPath(); g.moveTo(x + 4, y + 4); g.lineTo(x + w - 4, y + h - 4); g.moveTo(x + w - 4, y + 4); g.lineTo(x + 4, y + h - 4); g.stroke();
+        } else if (p.type === 'barrel') {
+          g.fillStyle = '#744629'; g.fillRect(x + 2, y, w - 4, h); g.fillStyle = '#b47a43'; g.fillRect(x + 4, y + 3, w - 8, h - 6); g.fillStyle = '#34323b'; g.fillRect(x + 1, y + 4, w - 2, 3); g.fillRect(x + 1, y + h - 7, w - 2, 3); g.fillStyle = '#dfb777'; g.fillRect(x + 6, y + 8, 2, 5);
+        } else if (p.type === 'jar') {
+          g.fillStyle = '#694b54'; g.fillRect(x + 4, y + 3, w - 8, h - 4); g.fillRect(x + 2, y + 7, w - 4, h - 11); g.fillStyle = '#c78b5b'; g.fillRect(x + 4, y + 2, w - 8, 4); g.fillStyle = 'rgba(255,230,190,.35)'; g.fillRect(x + 5, y + 7, 2, 7);
+        } else if (p.type === 'crystal') {
+          g.fillStyle = '#3d8caa'; g.beginPath(); g.moveTo(x + w / 2, y); g.lineTo(x + w - 2, y + h - 4); g.lineTo(x + w / 2, y + h); g.lineTo(x + 2, y + h - 4); g.closePath(); g.fill(); g.fillStyle = '#c7fbff'; g.beginPath(); g.moveTo(x + w / 2, y + 3); g.lineTo(x + w / 2 + 3, y + h - 5); g.lineTo(x + w / 2 - 2, y + h - 8); g.closePath(); g.fill();
+        } else {
+          g.fillStyle = '#77717a'; g.beginPath(); g.moveTo(x + 1, y + h); g.lineTo(x + 4, y + 6); g.lineTo(x + 11, y + 1); g.lineTo(x + w - 4, y + 5); g.lineTo(x + w - 1, y + h); g.closePath(); g.fill(); g.fillStyle = 'rgba(255,255,255,.24)'; g.fillRect(x + 6, y + 5, 6, 2);
+        }
+        if (p.hp < p.max) { g.fillStyle = '#241b2d'; g.fillRect(x, y - 5, w, 3); g.fillStyle = '#ffb347'; g.fillRect(x, y - 5, w * Math.max(0, p.hp / p.max), 3); }
+        g.restore();
+      }
+    } catch (e) { console.warn('[v104] rendu décor destructible', e); }
+    return r;
+  };
+
+  function damageProp(p, amount, owner) {
+    if (!p || p.gone) return;
+    p.hp -= Math.max(1, amount | 0);
+    if (p.hp > 0) { burst(p.x + p.w / 2, p.y + p.h / 2, p.color, 3); return; }
+    p.gone = true; const cx = p.x + p.w / 2, cy = p.y + p.h / 2;
+    burst(cx, cy, p.color, 13); burst(cx, cy, '#fff1c2', 5);
+    for (let i = 0; i < 8; i++) parts.push({ x: cx, y: cy, vx: (Math.random() - .5) * 3, vy: -Math.random() * 2, l: 16 + (Math.random() * 10 | 0), c: p.color, s: 2 + (i % 3), gr: .12 });
+    if (Math.random() < .22) {
+      if (owner && owner !== P) owner.gold = (owner.gold || 0) + 1;
+      else { gold += 1; if (window.ST) ST.gold = (ST.gold || 0) + 1; }
+      say('+1 ◆', cx - 5, cy - 14, '#ffd166');
+    }
+  }
+  function updateProps() {
+    if (!props.length) return;
+    const net = window.NET, peer = net && net.open ? (net.role === 'host' ? net.P2 : net.other) : null;
+    const players = [P, peer].filter((p, i, a) => p && a.indexOf(p) === i && !p.dn && p.hp > 0);
+    /* Projectiles des joueurs uniquement ; les BP (hostiles) ne cassent rien. */
+    for (const b of (B || [])) {
+      const owner = b && (b.o || P); if (!b || b.dead || !players.includes(owner)) continue;
+      const rad = b.r || (b.t === 'a' ? 4 : 7), box = { x: b.x - rad, y: b.y - rad, w: rad * 2, h: rad * 2 };
+      for (const p of props) if (!p.gone && !b._miPropHits?.has(p.id) && hit(box, p)) {
+        if (!b._miPropHits) b._miPropHits = new Set(); b._miPropHits.add(p.id); damageProp(p, b.t === 'a' ? 1 : 2, owner);
+      }
+    }
+    /* Reuse the game's exact weapon hitbox for melee, including each local player. */
+    const active = P;
+    for (const p of players) {
+      if (!(p.at > 0)) continue;
+      let h = null;
+      try { P = p; h = typeof hb === 'function' ? hb() : null; } catch (_) { h = null; } finally { P = active; }
+      if (!h) continue;
+      for (const d of props) {
+        if (d.gone || !hit(h, d)) continue;
+        const last = d.lastHit.get(p) || -999;
+        if (tick - last < 9) continue;
+        if (typeof h.c === 'function' && !h.c(d)) continue;
+        d.lastHit.set(p, tick); damageProp(d, p.wp === 'ham' ? 2 : 1, p);
+      }
+    }
+  }
+
+  /* Stocke les objets sur le nœud lui-même : une salle revisitée conserve les débris. */
+  const _initWalls104 = wmWalls;
+  wmWalls = function () {
+    const r = _initWalls104.apply(this, arguments);
+    try { initProps(); } catch (e) { props = []; console.warn('[v104] placement décor', e); }
+    return r;
+  };
+  const _upd104 = upd;
+  upd = function () { const r = _upd104.apply(this, arguments); try { updateProps(); } catch (e) { console.warn('[v104] dégâts décor', e); } return r; };
+
+  /* Garde une version lisible pour le débogage et les tests manuels. */
+  window.MI_VERSION = 'v104';
+  window.MI_V104 = { roomKind, isAnnex, isBoss, getProps: () => props.map(p => ({ type: p.type, hp: p.hp, gone: p.gone })), drawBossArchitecture };
 })();
 </script>
 
