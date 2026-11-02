@@ -11368,7 +11368,7 @@ document.addEventListener('touchmove', e => { if (!keepUI(e.target)) e.preventDe
 window.TOUCH2 = { Z, clearAll, gameOn, radius };
 /* repère de version discret sur l’écran d’accueil : permet de vérifier que l’appareil charge bien ce fichier (et pas une copie en cache) */
 window.MI_VERSION = 'v104';
-{ const h0 = drawHome; drawHome = function () { const r = h0.apply(this, arguments); try { g.save(); g.font = '9px system-ui'; g.textAlign = 'right'; g.fillStyle = 'rgba(185,180,232,.55)'; g.fillText('v104 · tactile', W - 6, H - 5); g.restore(); } catch (e) {} return r; }; }
+{ const h0 = drawHome; drawHome = function () { const r = h0.apply(this, arguments); try { g.save(); g.font = 'bold 12px system-ui'; g.textAlign = 'right'; g.fillStyle = 'rgba(255,224,130,.95)'; g.fillText('VERSION v105 · correctifs salles', W - 8, H - 7); g.restore(); } catch (e) {} return r; }; }
 })();
 </script>
 
