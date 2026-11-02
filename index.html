@@ -358,7 +358,7 @@ window.aiAs(e,()=>{if(!e.gb&&!e.bs&&!e.ag)wmPassive(e);else if(e.gb)gobAI(e);els
 else{const dx=TGT(e).x-e.x,ad=Math.abs(dx),ty=e.ty||{};e.vx=(ty.lance&&window.lanceVx)?window.lanceVx(e,dx,ad):ty.cga?window.cgaVx(e,dx,ad):ty.rg?(ad<150?-Math.sign(dx)*e.sp*.7:ad>240?Math.sign(dx)*e.sp:0):Math.sign(dx)*e.sp;if(ty.err)ccErr(e);const wv=e.vx;phys(e,G);if(wv&&!e.vx&&e.og)e.vy=-9;if(e.og&&P.y<e.y-40&&Math.random()<.01)e.vy=-8;if(ty.rg&&!ty.cga&&++e.st>(ty.rcd||110)&&ad<380&&Math.abs(TGT(e).y-e.y)<170&&seeP(e)){e.st=0;e.tg=18}}});
 if(e.kb){e.x+=e.kb;e.kb*=.8;if(Math.abs(e.kb)<.2)e.kb=0}
 if(hit&&e.sw!=swing&&ov(hit,e)&&(!hit.c||hit.c(e))){e.sw=swing;rlWT(P,e);dmgE(e,P.dmg*hit.m*P.wm,(P.wp=='ham'?(Math.sign(e.x-P.x)||1):(P.qa!=null?(Math.sign(Math.cos(P.qa))||P.face):P.face))*hit.k);hs=Math.max(hs,HSW[P.wp]||2);shk=Math.max(shk,SKW[P.wp]||1);burst(e.x+e.w/2,e.y+e.h/2,wc(),6);burst(e.x+e.w/2,e.y+e.h/2,'#ffffff',3)}
-if(!e.gb&&!e.noC&&P.x<e.x+e.w&&P.x+P.w>e.x&&P.y<e.y+e.h&&P.y+P.h>e.y)hurt(1)}
+if(!e.gb&&!e.noC){if(window.v104Melee)v104Melee(e);else if(P.x<e.x+e.w&&P.x+P.w>e.x&&P.y<e.y+e.h&&P.y+P.h>e.y)hurt(1)}}
 for(const b of B){if(P.xw&&tick%3==0)parts.push({x:b.x,y:b.y,vx:0,vy:0,l:18,c:b.c||P.xw.c,s:2,gr:0});if(b.t=='a'){if(bfOn(b))bfHome(b);b.x+=b.vx;b.y+=b.vy||0;b.l--;for(const e of E)if(!b.dead&&ov({x:b.x-6,y:b.y-3,w:12,h:6},e)){b.dead=1;rlWT(b.o||P,e);{const sP=P;if(b.o&&b.o!==P)P=b.o;window.BNP=1;try{dmgE(e,b.d,Math.sign(b.vx)*4)}finally{P=sP;window.BNP=0}}}if(b.x<-10||b.x>RW+10||b.y<-10||b.y>RF||b.l<=0)b.dead=1}else{if(!b.r){if(bfOn(b))bfHome(b);const kk=b.k||1,dp=Math.pow(.955,kk);if(window.chMove)chMove(b,kk);else{b.x+=b.vx*kk;b.y+=b.vy*kk}b.vx*=dp;b.vy*=dp;if(Math.hypot(b.vx,b.vy)<1.3||(!window.chMove&&(b.x<5||b.x>RW-5||b.y<5||b.y>RF)))b.r=1}else{const O=b.o||P,dx=O.x+9-b.x,dy=O.y+13-b.y,d=Math.hypot(dx,dy)||1;if(window.chBack)chBack(b,O,dx/d*6.5*(b.k||1),dy/d*6.5*(b.k||1),d);else{b.x+=dx/d*6.5*(b.k||1);b.y+=dy/d*6.5*(b.k||1)}if(d<12+6.5*((b.k||1)-1)){b.dead=1;burst(O.x+9,O.y+13,'#c77dff',10)}}b.a+=.5;(b.tr=b.tr||[]).push([b.x,b.y]);if(b.tr.length>7)b.tr.shift();for(const e of E)if(tick-(e.ch||-99)>14&&ov({x:b.x-9,y:b.y-9,w:18,h:18},e)){e.ch=tick;rlWT(b.o||P,e);{const sP=P;if(b.o&&b.o!==P)P=b.o;window.BNP=1;try{dmgE(e,b.d,b.r?0:Math.sign(e.x-b.x)*3.6)}finally{P=sP;window.BNP=0}}}}}
 B=B.filter(b=>!b.dead);BP=BP.filter(b=>{b.x+=b.vx;b.y+=b.vy;if(b.gv)b.vy+=b.gv;b.l--;for(const q of WL)if(b.x>q.x&&b.x<q.x+q.w&&b.y>q.y&&b.y<q.y+q.h)return false;if(Math.hypot(b.x-P.x-9,b.y-P.y-13)<b.r+9){if(b.dn&&window.deniPH)deniPH(b);else hurt(1);return false}return b.l>0&&b.x>-30&&b.x<RW+30&&b.y<RF+8&&b.y>-60});
 E=E.filter(e=>{if(e.kgx){burst(e.x+e.w/2,e.y+e.h/2,'#b987ff',8);return false}if(e.gb&&e.life<=0&&e.hp>0){burst(e.x+10,e.y+10,'#ffd166',16);say('Le gobelin s’enfuit !',e.x-30,e.y-10,'#ffd166');return false}if(e.hp<=0&&e.floz&&flozSave(e))return true;if(e.hp<=0&&e.klt&&kltSave(e))return true;if(e.hp<=0&&e.deni&&window.deniSave&&deniSave(e))return true;if(e.hp<=0&&e.bassi&&window.bassiSave&&bassiSave(e))return true;if(e.hp<=0&&e.gst&&window.gstSave&&gstSave(e))return true;if(e.hp<=0){if(e.kg&&window.kltGrpDeath)try{kltGrpDeath(e)}catch(_){}wmDie(e);asK(e,()=>rlKill(e));shk=Math.max(shk,e.bs?10:2);burst(e.x+10,e.y+10,'#7af0ff',14);(window.bnCoin||((e,n)=>{gold+=n}))(e,(window.__kg=window.bxGold?bxGold((1+(lvl/8|0))*.6,1):Math.max(1,Math.round((1+(lvl/8|0))*.6*P.gm)))+(e.bs&&!e.fzSum?20:0)+(e.gb?e.hits*3:0));ST.kills++;bsKill(e);zkKill();if(e.key&&window.keyKill)keyKill(e);xwDrop(e);wmKill(e);asK(e,()=>{if(P.xw&&P.xw.n=='LANCE CRISTAL'){gold+=3;ST.gold+=3}});if(e.bs&&!e.sub)ST.boss++;ST.gold+=(window.__kg||1)+(e.bs&&!e.fzSum?20:0);if(Math.random()<(e.bs?0:e.br?.15:.05))dropW(e);bfDrop(e);if(e.bs&&!e.fzSum&&!(e.rom&&romOth(e))){P.hp=P.max;burst(e.x+e.w/2,e.y+e.h/2,'#ffd166',60)}if(Math.random()<0&&P.hp<P.max){P.hp++;say('+1♥',P.x,P.y-14,'#ff4d6d')}asK(e,()=>{if(P.ex){burst(e.x+10,e.y+10,'#ffa94d',24);for(let i=0;i<28;i++){const q=i/28*6.283;parts.push({x:e.x+10,y:e.y+10,vx:Math.cos(q)*4.5,vy:Math.sin(q)*4.5,l:22,c:i%2?'#ff4dd8':'#ffa94d',s:3,gr:0})}for(const o of E)if(o!==e&&Math.abs(o.x-e.x)<70&&Math.abs(o.y-e.y)<70){o.hp-=P.dmg*1.5;o.kb=Math.sign(o.x-e.x||1)*9}}});return false}return true});
@@ -12935,6 +12935,27 @@ const sx = v => Math.round(v / 16) * 16, sy = v => Math.round((v - TOFF) / 16) *
 function add(x, y, w, h) { const x1 = sx(x), y1 = sy(y); let x2 = sx(x + w), y2 = sy(y + h); if (x2 < x1 + 16) x2 = x1 + 16; if (y2 < y1 + 16) y2 = y1 + 16; const q = { x: x1, y: y1, w: x2 - x1, h: y2 - y1 }; WL.push(q); return q; }
 const hitWL = (x, y, w, h) => WL.some(q => x < q.x + q.w && x + w > q.x && y < q.y + q.h && y + h > q.y);
 const hitPl = (x, y, w, h, but) => plats.some(p => p !== but && x < p.x + p.w && x + w > p.x && y < p.y + 16 && y + h > p.y);
+/* ---- v104 : disposition des plateformes ALÉATOIRE (plus d'escalier fixe) · entrée au sol, plus de plateforme de départ en haut à gauche ---- */
+const RI = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+wmPlatsO = function () {
+  const st = 62, K = Math.max(2, Math.floor((RF - 120) / st)); GY = RF; DSC = { K: 0, xs: [] };
+  const o = [], X0 = 180, X1 = RW - 200, nT = Math.max(4, Math.round((RW - 340) / 165) + RI(-1, 2)), peaks = Array.from({ length: RI(1, 3) }, () => RI(X0 + 60, Math.max(X0 + 61, X1 - 60)));
+  for (let t = 0; t < nT * 16 && o.length < nT; t++) {
+    const par = o.length && Math.random() < .8 ? o[RI(0, o.length - 1)] : null, pt = par ? Math.round((RF - par.y) / st) : 0, w = RI(80, 170);
+    let x = par ? Math.round(par.x + (Math.random() < .5 ? -(w + RI(20, 66)) : par.w + RI(20, 66))) : RI(X0, Math.max(X0, X1 - w));
+    if (par && Math.random() < .25) x = par.x + RI(-40, Math.max(-40, par.w - w + 40));
+    if (x < X0 || x + w > X1 + 40) continue;
+    const near = Math.min(...peaks.map(q => Math.abs(q - x)));
+    let tier = pt + (Math.random() < .55 ? 1 : Math.random() < .5 ? 0 : -1) + (near < 170 && Math.random() < .4 ? 1 : 0);
+    tier = Math.max(1, Math.min(K, tier)); const y = RF - tier * st;
+    if (o.some(q => Math.abs(q.y - y) < 40 && x < q.x + q.w + 30 && x + w > q.x - 30)) continue;
+    o.push({ x, y, w }); }
+  return o; };
+tPrune = function () {   // accessibilité depuis le SOL (l'entrée est maintenant au sol)
+  const N = [{ a: 0, b: RW, y: RF }]; for (const p of plats) N.push({ a: p.x, b: p.x + p.w, y: p.y, p }); for (const q of WL) if (q.y > -10) N.push({ a: q.x, b: q.x + q.w, y: q.y, q });
+  const seen = new Set([N[0]]), stk = [N[0]];
+  while (stk.length) { const n = stk.pop(); for (const m of N) if (!seen.has(m)) { const gap = Math.max(0, Math.max(n.a, m.a) - Math.min(n.b, m.b)); if (gap <= 70 && m.y >= n.y - 66) { seen.add(m); stk.push(m); } } }
+  plats = plats.filter(p => N.some(n => n.p === p && seen.has(n))); for (let i = WL.length; i--;) { const q = WL[i]; if (q.y > -10 && !N.some(n => n.q === q && seen.has(n))) WL.splice(i, 1); } };
 window.ARCHI_STATS = { anchored: 0, wall: 0, pillar: 0, loose: 0, rooms: 0 };
 function archi() {
   const S = window.ARCHI_STATS; S.rooms++;
@@ -12951,7 +12972,7 @@ function archi() {
       let w = leftW(p.y), edge = w ? w.x + w.w : 32;
       if (!w && p.y > GY + 30 && p.y < RF - 116 && !hitWL(0, p.y - 4, 32, Math.max(32, RF - 100 - p.y))) { add(0, p.y - 4, 32, Math.max(32, RF - 100 - p.y)); w = leftW(p.y); }
       if (w) { p.w += Math.max(0, p.x - edge); p.x = edge; done = 'wall'; } }
-    else if (p.x + p.w >= RW - 160) {                   // prolongement du mur de droite
+    else if (p.x + p.w >= RW - 160 && p.y < RF - 116) {                   // prolongement du mur de droite
       let w = rightW(p.y), edge = w ? w.x : RW - 32;
       if (!w && p.y < RF - 116 && !hitWL(RW - 32, p.y - 4, 32, Math.max(32, RF - 100 - p.y))) { add(RW - 32, p.y - 4, 32, Math.max(32, RF - 100 - p.y)); w = rightW(p.y); }
       if (w) { p.w = Math.max(32, edge - p.x); done = 'wall'; } }
@@ -12994,22 +13015,28 @@ function brkGen() { BRK = []; if (lvl % 10 === 0 || (window.NET && NET.role === 
   for (let i = 0; i < n; i++) for (let t = 0; t < 12; t++) { const k = KINDS[(z + (Math.random() * 3 | 0)) % KINDS.length], x = 90 + Math.random() * (RW - 220), y = RF - k[4];
     if (hitWL(x - 6, y, k[3] + 12, k[4])) continue; if (BRK.some(b => Math.abs(b.x - x) < 50)) continue;
     if (typeof TRP !== 'undefined' && TRP.some(q => x + k[3] > (q.a != null ? q.a : q.x) - 20 && x < (q.b != null ? q.b : q.x + q.w) + 20)) continue;
-    BRK.push({ x, y, w: k[3], h: k[4], hp: 2 + (Math.random() * 2 | 0), c1: k[1], c2: k[2], k: k[0], cd: 0 }); break; } }
+    BRK.push({ x, y, w: k[3], h: k[4], hp: 1, c1: k[1], c2: k[2], k: k[0], cd: 0 }); break; } }
 { const r0 = roomO; roomO = function () { const r = r0.apply(this, arguments); try { fixSpawns(); brkGen(); } catch (e) { console.warn('[v104] décors', e); } return r; }; }
 function plyrs() { try { return (window.players ? players() : [P]).filter(Boolean); } catch (e) { return [P]; } }
 let lastT = -1;
+function brkLoot(b, p) {   // butin d'un décor cassé : or (variable) · PV (variable) · bonus (rare) · relique (très très rare)
+  const x = b.x + b.w / 2, y = b.y - 6, r = Math.random(), c = b.c1;
+  const g2 = !!(window.NET && NET.open && NET.P2 && p === NET.P2);
+  if (r < .004 && !g2) { say('✦ RELIQUE !', x - 28, y - 14, '#ffd166'); burst(x, y, '#ffd166', 30); try { rlOffer(); } catch (e) { } return; }
+  if (r < .05) { try { const bo = bxRoll(1)[0]; if (bo) { bo.f(); say('BONUS · ' + bo.n, x - 36, y - 14, bo.c || '#c77dff'); burst(x, y, bo.c || '#c77dff', 20); return; } } catch (e) { } }
+  if (r < .40) { const q = p || P, n = Math.max(.2, Math.round(q.max * (.08 + Math.random() * .17) * 10) / 10); q.hp = Math.min(q.max, q.hp + n); say('+' + Math.round(n * 20) + ' PV', x - 16, y, '#ff6b8a'); burst(x, y, '#ff6b8a', 14); return; }
+  const v = Math.max(1, Math.round((1 + (lvl / 4 | 0)) * (1 + Math.random() * 5))); if (g2) NET.P2.gold = (NET.P2.gold || 0) + v; else { gold += v; lastG = gold; }
+  say('+' + v + ' ◆', x - 14, y, '#ffd166'); burst(x, y, '#ffd166', 12);
+}
 function brkStep() {
   if (lastT === tick || menu || ps || choice || shop) return; lastT = tick;
-  for (let i = BRK.length; i--;) { const b = BRK[i]; if (b.cd > 0) b.cd--;
+  for (let i = BRK.length; i--;) { const b = BRK[i];
     if ((typeof chest !== 'undefined' && chest && b.x < chest.x + chest.w + 4 && b.x + b.w > chest.x - 4) || (typeof mc !== 'undefined' && mc && b.x < mc.x + mc.w + 4 && b.x + b.w > mc.x - 4)) { BRK.splice(i, 1); continue; }
-    let hit = 0;
+    let hit = null;
     for (const p of plyrs()) { if (!p) continue; const cx = p.x + 9, f = p.face || 1;
-      if (p.at > 0 && Math.abs(p.y + 13 - (b.y + b.h / 2)) < 34 && f * (b.x + b.w / 2 - cx) > -6 && Math.abs(b.x + b.w / 2 - cx) < 48) hit = 1;
-      for (const q of NB) if (q && !q.dead && q.o === p && q.k !== 'zone' && q.x > b.x - (q.r || 5) && q.x < b.x + b.w + (q.r || 5) && q.y > b.y - (q.r || 5) && q.y < b.y + b.h + (q.r || 5)) hit = 1; }
-    if (hit && b.cd <= 0) { b.hp--; b.cd = 12; burst(b.x + b.w / 2, b.y + b.h / 2, b.c1, 6);
-      if (b.hp <= 0) { burst(b.x + b.w / 2, b.y + b.h / 2, b.c1, 16); burst(b.x + b.w / 2, b.y + b.h / 2, b.c2, 8);
-        if (Math.random() < .55) { const v = (1 + (lvl / 5 | 0)) * (1 + (Math.random() * 3 | 0)); gold += v; say('+' + v + ' ◆', b.x - 4, b.y - 10, '#ffd166'); }
-        BRK.splice(i, 1); shk = Math.max(shk, 2); } } } }
+      if (p.at > 0 && Math.abs(p.y + 13 - (b.y + b.h / 2)) < 34 && f * (b.x + b.w / 2 - cx) > -6 && Math.abs(b.x + b.w / 2 - cx) < 48) hit = p;
+      for (const q of NB) if (q && !q.dead && q.o === p && q.k !== 'zone' && q.x > b.x - (q.r || 5) && q.x < b.x + b.w + (q.r || 5) && q.y > b.y - (q.r || 5) && q.y < b.y + b.h + (q.r || 5)) hit = p; }
+    if (hit) { burst(b.x + b.w / 2, b.y + b.h / 2, b.c1, 16); burst(b.x + b.w / 2, b.y + b.h / 2, b.c2, 8); BRK.splice(i, 1); shk = Math.max(shk, 2); brkLoot(b, hit); } } }
 function brkDraw() { for (const b of BRK) { g.save(); const x = b.x, y = b.y, w = b.w, h = b.h; g.fillStyle = 'rgba(0,0,0,.28)'; g.fillRect(x - 1, y + h - 2, w + 2, 3);
     if (b.k === 'crystal') { g.fillStyle = b.c2; g.beginPath(); g.moveTo(x, y + h); g.lineTo(x + w * .3, y + 4); g.lineTo(x + w * .5, y); g.lineTo(x + w * .8, y + 6); g.lineTo(x + w, y + h); g.fill(); g.fillStyle = b.c1; g.fillRect(x + w * .4, y + 4, 3, h - 8); }
     else if (b.k === 'jar') { g.fillStyle = b.c1; g.fillRect(x + 1, y + 4, w - 2, h - 4); g.fillRect(x + 3, y, w - 6, 5); g.fillStyle = b.c2; g.fillRect(x + 1, y + h - 4, w - 2, 4); }
@@ -13019,7 +13046,16 @@ function brkDraw() { for (const b of BRK) { g.save(); const x = b.x, y = b.y, w 
     if (b.hp < 2 && b.k !== 'crystal') { g.strokeStyle = 'rgba(0,0,0,.7)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x + w * .3, y + 2); g.lineTo(x + w * .5, y + h * .5); g.lineTo(x + w * .4, y + h - 2); g.stroke(); }
     g.restore(); } }
 { const t0 = window.trapDraw; window.trapDraw = function () { if (t0) t0.apply(this, arguments); try { brkStep(); brkDraw(); } catch (e) {} }; }
-try { if (typeof WL !== 'undefined' && lvl === 1 && !window.ARCHI_STATS.rooms) { archi(); brkGen(); if (typeof tBake === 'function') tBake(); } } catch (e) { console.warn('[v104] salle 1', e); }   // la salle 1 est construite avant ce module
+try { if (typeof WL !== 'undefined' && lvl === 1 && !window.ARCHI_STATS.rooms) { roomO(); if (typeof tBake === 'function') tBake(); P.x = 4; P.y = GY - (P.h || 26) - 1; if (typeof wmCamSnap === 'function') wmCamSnap(); try { for (const q of WORLD.sensors) if (q.dir === 'W') q.rect.y = GY - 64; } catch (e2) {} } } catch (e) { console.warn('[v104] salle 1', e); }   // la salle 1 est construite avant ce module : on la régénère avec la nouvelle disposition
+/* v104 : les monstres ne blessent plus au simple contact. Ils doivent ATTAQUER : annonce (≈ 0,35 s, étincelles rouges), puis coup uniquement
+   si le joueur est encore à portée au moment de l'impact ; recharge ensuite. */
+window.v104Melee = function (e) {
+  const near = P.x < e.x + e.w + 6 && P.x + P.w > e.x - 6 && P.y < e.y + e.h + 2 && P.y + P.h > e.y - 2;
+  if (e.aw > 0) { e.aw--; if (tick % 3 === 0) burst(e.x + e.w / 2, e.y - 4, '#ff4d6d', 2);
+    if (e.aw === 0) { e.ac = 80; if (near && P.inv <= 0) { hurt(1); burst(P.x + 9, P.y + 13, '#ff4d6d', 10); } } return; }
+  if (e.ac > 0) { e.ac--; return; }
+  if (near && P.inv <= 0) e.aw = 20;
+};
 window.V104 = { archi, brk: () => BRK, ANX: () => window.ANX };
 })();
 </script>
