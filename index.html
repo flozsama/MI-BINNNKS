@@ -12940,8 +12940,10 @@ function archi() {
   const S = window.ARCHI_STATS; S.rooms++;
   const T = TOFF, cb = T + 32;
   if (lvl % 10 === 0) return arena(T, cb);
+  try { clearPortal(); } catch (e) {}
   const leftW = y => WL.find(q => q.x <= 0 && q.w >= 16 && q.y <= y && q.y + q.h >= y + 12), rightW = y => WL.find(q => q.x + q.w >= RW && q.w >= 16 && q.y <= y && q.y + q.h >= y + 12);
   if (lvl === 1 && !rightW(RF - 120)) add(RW - 32, T - 48, 32, RF - 100 - T + 48);
+  let mesas = 0;
   for (const p of plats) {
     if (p.y >= RF - 6) continue;
     let done = false;
@@ -12953,15 +12955,25 @@ function archi() {
       let w = rightW(p.y), edge = w ? w.x : RW - 32;
       if (!w && p.y < RF - 116 && !hitWL(RW - 32, p.y - 4, 32, Math.max(32, RF - 100 - p.y))) { add(RW - 32, p.y - 4, 32, Math.max(32, RF - 100 - p.y)); w = rightW(p.y); }
       if (w) { p.w = Math.max(32, edge - p.x); done = 'wall'; } }
+    if (!done && p.y >= RF - 132 && p.y < RF - 40 && p.w >= 64 && p.x >= 140 && p.x + p.w <= RW - 150 && mesas < 2 && Math.random() < .7) {   // v104 : sol surélevé plein sous la plateforme (on ne passe pas dessous)
+      const mx = sx(p.x), mw = sx(p.x + p.w) - mx, my = p.y;
+      if (mw >= 64 && !hitPl(mx, my + 16, mw, RF - my - 16, p) && !hitWL(mx, my, mw, RF - my)) {
+        add(mx, my, mw, RF - my); mesas++; done = 'mesa';
+        if (RF - my > 70) { if (!hitWL(mx - 48, RF - 62, 48, 62)) add(mx - 48, RF - 62, 48, 62); if (!hitWL(mx + mw, RF - 62, 48, 62)) add(mx + mw, RF - 62, 48, 62); } } }
     if (!done) {                                        // plateforme suspendue au plafond par un pilier de pierre
       const y0 = T + 16, h = p.y - y0;
       if (h < 20) done = 'pillar';
       else for (const x of [sx(p.x), sx(p.x + p.w) - 16, sx(p.x + p.w / 2), sx(p.x + p.w * .25), sx(p.x + p.w * .75)]) { if (x < 40 || x > RW - 56) continue; if (hitPl(x, y0, 16, h, p)) continue;
         if (hitWL(x, y0 + 8, 16, h - 8)) { done = 'pillar'; break; }   // déjà adossée à un bloc existant
         add(x, y0, 16, h); done = 'pillar'; break; } }
-    if (done === 'wall') S.wall++; else if (done === 'pillar') S.pillar++; else S.loose++;
+    if (done === 'wall') S.wall++; else if (done === 'pillar') S.pillar++; else if (done === 'mesa') S.mesa = (S.mesa || 0) + 1; else S.loose++;
     if (done) S.anchored++;
     p.x = sx(p.x); p.w = Math.max(32, sx(p.w)); }
+  clearPortal();
+}
+function clearPortal() {   // v104 : l'accès au portail (côté droit, au sol) reste toujours dégagé sur 96 px de haut
+  for (let i = WL.length; i--;) { const q = WL[i]; if (q.x + q.w > RW - 56 && q.y + q.h > RF - 96 && q.y < RF) { const nh = (RF - 96) - q.y; if (nh < 16) WL.splice(i, 1); else q.h = Math.floor(nh / 16) * 16 || 16; } }
+  for (let i = WL.length; i--;) { const q = WL[i]; if (q.x + q.w > RW - 200 && q.x < RW - 20 && q.y + q.h > RF - 96 && q.y < RF) WL.splice(i, 1); }
 }
 function arena(T, cb) {          // arènes de boss : la géométrie dépend de la zone du boss (suspensions de plafond), sol et murs latéraux inchangés
   const z = (Math.round(lvl / 10) - 1) % 6, v = [[.25, .75, 48, 56], [.2, .5, 24, 64], [.33, .67, 64, 40], [.15, .85, 40, 72], [.5, .5, 80, 48], [.3, .7, 32, 56]][z];
@@ -12971,6 +12983,10 @@ function arena(T, cb) {          // arènes de boss : la géométrie dépend de 
 { const w0 = wmWalls; wmWalls = function () { w0.apply(this, arguments); try { archi(); } catch (e) { console.warn('[v104] archi', e); } }; }
 
 /* =============================== DÉCORS CASSABLES =============================== */
+function fixSpawns() {   // v104 : aucun ennemi ne naît dans un bloc de terre / de pierre : il est posé au-dessus
+  for (const e of (typeof E !== 'undefined' ? E : [])) for (let k = 0; k < 6; k++) {
+    const q = WL.find(q => e.x < q.x + q.w && e.x + e.w > q.x && e.y < q.y + q.h && e.y + e.h > q.y); if (!q) break;
+    e.y = q.y - e.h - 1; if (e.vy > 0) e.vy = 0; } }
 let BRK = [];
 const KINDS = [['crate', '#9a6b34', '#5c3a14', 18, 18], ['barrel', '#8a5a2a', '#4a2c10', 16, 22], ['jar', '#c98a4a', '#6b3f1a', 14, 18], ['crystal', '#7af0ff', '#2a6a8a', 14, 22], ['rock', '#8a8794', '#4a4852', 22, 16]];
 function brkGen() { BRK = []; if (lvl % 10 === 0 || (window.NET && NET.role === 'guest')) return; if (Math.random() < .3) return;
@@ -12979,7 +12995,7 @@ function brkGen() { BRK = []; if (lvl % 10 === 0 || (window.NET && NET.role === 
     if (hitWL(x - 6, y, k[3] + 12, k[4])) continue; if (BRK.some(b => Math.abs(b.x - x) < 50)) continue;
     if (typeof TRP !== 'undefined' && TRP.some(q => x + k[3] > (q.a != null ? q.a : q.x) - 20 && x < (q.b != null ? q.b : q.x + q.w) + 20)) continue;
     BRK.push({ x, y, w: k[3], h: k[4], hp: 2 + (Math.random() * 2 | 0), c1: k[1], c2: k[2], k: k[0], cd: 0 }); break; } }
-{ const r0 = roomO; roomO = function () { const r = r0.apply(this, arguments); try { brkGen(); } catch (e) { console.warn('[v104] décors', e); } return r; }; }
+{ const r0 = roomO; roomO = function () { const r = r0.apply(this, arguments); try { fixSpawns(); brkGen(); } catch (e) { console.warn('[v104] décors', e); } return r; }; }
 function plyrs() { try { return (window.players ? players() : [P]).filter(Boolean); } catch (e) { return [P]; } }
 let lastT = -1;
 function brkStep() {
