@@ -395,7 +395,7 @@ for(const d of DR){if(d.l<120&&d.l%10<5)continue;const c=d.xw?d.xw.c:WC[d.k].c,b
 for(const Z of(window.NET&&NET.role=='guest'?(NET.lz||[]):[...LZP.values()].flat())){g.save();glow('#ff5ad9',18);g.lineCap='round';g.beginPath();g.moveTo(Z.x0,Z.y0);g.lineTo(Z.x1,Z.y1);g.strokeStyle='#ff5ad9';g.globalAlpha=.55;g.lineWidth=9+Math.sin(tick*.8)*2;g.stroke();g.strokeStyle='#fff';g.globalAlpha=.95;g.lineWidth=3;g.stroke();g.restore()}
 drawB();drawBP();bfDraw();rlDraw();for(const p of parts){g.globalAlpha=p.l/30;g.fillStyle=p.c;g.fillRect(p.x,p.y,p.s||3,p.s||3)}g.globalAlpha=1;if(window.bpTop)bpTop();g.globalAlpha=1;
 g.font='bold 12px system-ui';for(const t of texts){g.globalAlpha=t.l/60;g.fillStyle=t.c;g.fillText(t.t,t.x,t.y)}g.globalAlpha=1;
-forestFG();g.restore();wmHit();tLight();if(th.k&&!(typeof jungOn=='function'&&jungOn())){glow('transparent',0);const vg=g.createRadialGradient(P.x+9-cam.x,P.y+13-cam.y,70,P.x+9-cam.x,P.y+13-cam.y,300);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,'+(E.some(e=>e.coco)?.4:.85)+')');g.fillStyle=vg;g.fillRect(0,0,W,H)}
+forestFG();g.restore();wmHit();tLight();if(th.k&&!(typeof jungOn=='function'&&jungOn())){glow('transparent',0);const vg=g.createRadialGradient(P.x+9-cam.x,P.y+13-cam.y,110,P.x+9-cam.x,P.y+13-cam.y,360);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,'+(E.some(e=>e.coco)?.4:.6)+')');g.fillStyle=vg;g.fillRect(0,0,W,H)}
 drawPU();const BB=window.bbH?bbH():0;g.save();g.translate(0,BB);const bo=bfIcons();g.save();g.translate(0,bo);wmHearts();g.restore();
 tHUD('Salle '+lvl+'   ◆ '+gold+(window.NET&&NET.open&&NET.role=='host'&&NET.P2?' (J2 ◆ '+(NET.P2.gold|0)+')':'')+'   ⚔ '+P.dmg+' · '+(P.xw?P.xw.n+' ✦'+P.xw.mg:WP[P.wp].n)+' ★'+wmT()+(P.base?' (base)':'')+(P.sh?'  ◈'+P.sh:''),10,38+bo);g.restore();wmPB();
 g.font='bold 12px "Courier New",monospace';if(!cleared)g.fillText('Monstres : '+wmLeft(),W-110,22);else if(cleared)g.fillText('Portail ouvert !',W-120,22);if(cleared)wmHint();else wmLast();
@@ -2837,7 +2837,7 @@ function tPanel(x,y,w,h){g.save();g.fillStyle='#2b2a2e';g.fillRect(x,y,w,h);g.fi
 function tHUD(t,x,y){g.save();g.font='bold 12px "Courier New",monospace';const w=Math.ceil(g.measureText(t).width)+14;tPanel(x-6,y-16,Math.min(w,W-120),24);g.fillStyle='#f2e6c8';g.fillText(t,x,y);g.restore()}
 /* --- salles organiques : blocs solides + vérification d'accessibilité --- */
 function wmDims(){wmDimsO();if(lvl%10&&lvl!=1){RW=Math.round(RW*(.9+Math.random()*.4));RH=Math.round(RH*(.9+Math.random()*.4));RF=RH-40;GY=RF}}
-function wmPlats(){const o=wmPlatsO(),n=lvl<2?1:rp(2,5);
+function wmPlats(){const o=wmPlatsO(),n=lvl<2?1:rp(2,5);if(!o.length)return o;
 for(let t=0;t<n;t++)for(let tr=0;tr<12;tr++){const b=o[rp(0,o.length)],w=rp(70,110),x=Math.round(b.x+rp(-60,b.w)),y=Math.round(b.y-rp(46,58));if(y<70||x<200||x+w>RW-120)continue;if(o.some(q=>x<q.x+q.w+24&&x+w>q.x-24&&Math.abs(q.y-y)<34))continue;o.push({x,y,w,fl:1});break}return o}
 function tFree(x,y,w,h,m){return plats.every(p=>p.x+p.w<x-m||p.x>x+w+m||p.y+16<y-m||p.y>y+h+m)&&WL.every(q=>q.x+q.w<x-m||q.x>x+w+m||q.y+q.h<y-m||q.y>y+h+m)}
 function tOrg(){const hi=lvl>=3;
@@ -4502,6 +4502,7 @@ function rectOverlap(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < 
       if (node.lair) { lairBuild(); }
       else if (node.kind === 'start' || node.kind === 'treasure' || node.kind === 'shop' || node.kind === 'rest' || node.kind === 'tunnel') {
         E = []; cleared = true; wave = waves;
+        RT = 'norm'; TRP = []; ZX = []; SEC = null; CH2 = null; for (let i = TO.length; i--;) if (/SALLE (PIÈGE|ÉLITE|AU TRÉSOR)/.test((TO[i] && TO[i].t) || '')) TO.splice(i, 1); try { if (window.trapReset) trapReset(); } catch (e) {}   /* v105 : aucune salle piège / élite / trésor dans une annexe */
         chest = node.kind === 'treasure' ? mkChest(false) : null;
         mc = node.kind === 'shop' ? mkMerchant() : null;
         hidFix(node);
@@ -12939,7 +12940,7 @@ const hitPl = (x, y, w, h, but) => plats.some(p => p !== but && x < p.x + p.w &&
 const RI = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 wmPlatsO = function () {
   const st = 62, K = Math.max(2, Math.floor((RF - 120) / st)); GY = RF; DSC = { K: 0, xs: [] };
-  const o = [], X0 = 180, X1 = RW - 200, nT = Math.max(4, Math.round((RW - 340) / 165) + RI(-1, 2)), peaks = Array.from({ length: RI(1, 3) }, () => RI(X0 + 60, Math.max(X0 + 61, X1 - 60)));
+  const sm = RW < 600, o = [], X0 = sm ? 96 : 180, X1 = RW - (sm ? 128 : 200), nT = Math.max(4, Math.round((RW - 340) / 165) + RI(-1, 2)), peaks = Array.from({ length: RI(1, 3) }, () => RI(X0 + 60, Math.max(X0 + 61, X1 - 60)));
   for (let t = 0; t < nT * 16 && o.length < nT; t++) {
     const par = o.length && Math.random() < .8 ? o[RI(0, o.length - 1)] : null, pt = par ? Math.round((RF - par.y) / st) : 0, w = RI(80, 170);
     let x = par ? Math.round(par.x + (Math.random() < .5 ? -(w + RI(20, 66)) : par.w + RI(20, 66))) : RI(X0, Math.max(X0, X1 - w));
@@ -12979,7 +12980,7 @@ function archi() {
     if (!done && p.y >= RF - 132 && p.y < RF - 40 && p.w >= 64 && p.x >= 140 && p.x + p.w <= RW - 150 && mesas < 2 && Math.random() < .7) {   // v104 : sol surélevé plein sous la plateforme (on ne passe pas dessous)
       const mx = sx(p.x), mw = sx(p.x + p.w) - mx, my = p.y;
       if (mw >= 64 && !hitPl(mx, my + 16, mw, RF - my - 16, p) && !hitWL(mx, my, mw, RF - my)) {
-        add(mx, my, mw, RF - my); mesas++; done = 'mesa';
+        const mq = add(mx, my, mw, RF - my); p.y = mq.y; mesas++; done = 'mesa';   /* v105 : la plateforme se cale sur le dessus du bloc (plus de monstre enfoncé) */
         if (RF - my > 70) { if (!hitWL(mx - 48, RF - 62, 48, 62)) add(mx - 48, RF - 62, 48, 62); if (!hitWL(mx + mw, RF - 62, 48, 62)) add(mx + mw, RF - 62, 48, 62); } } }
     if (!done) {                                        // plateforme suspendue au plafond par un pilier de pierre
       const y0 = T + 16, h = p.y - y0;
@@ -13003,11 +13004,67 @@ function arena(T, cb) {          // arènes de boss : la géométrie dépend de 
 }
 { const w0 = wmWalls; wmWalls = function () { w0.apply(this, arguments); try { archi(); } catch (e) { console.warn('[v104] archi', e); } }; }
 
+/* v105 : salles plus étroites que l'écran (repos, boutique, trésor, arènes…) : caméra centrée + marges en pierre (plus de noir sur le côté) */
+{ const c0 = wmCam; wmCam = function () { const r = c0.apply(this, arguments); if (RW < W) cam.x = (RW - W) / 2; return r; }; }
+{ const c1 = wmCamSnap; wmCamSnap = function () { const r = c1.apply(this, arguments); if (RW < W) cam.x = (RW - W) / 2; return r; }; }
+let MPAT = null, MKEY = null;
+function marginFill() {
+  if (RW >= W) return; if (window.WORLD && WORLD.current && WORLD.current.hidden) return; if (lvl % 10 === 0) return;
+  let sh = null; try { sh = tSheet(); } catch (e) {}
+  if (sh && MKEY !== sh) { try { const pc = document.createElement('canvas'); pc.width = pc.height = 16; pc.getContext('2d').drawImage(sh, 0, 0, 16, 16, 0, 0, 16, 16); MPAT = g.createPattern(pc, 'repeat'); MKEY = sh; } catch (e) { MPAT = null; } }
+  const y0 = -48, hh = RH + 96;
+  for (const x0 of [-W, RW]) { g.fillStyle = '#07060f'; g.fillRect(x0, y0, W, hh); if (MPAT) { g.fillStyle = MPAT; g.fillRect(x0, y0, W, hh); } else { g.fillStyle = (th && th.f) || '#14112a'; g.fillRect(x0, y0, W, hh); }
+    g.fillStyle = 'rgba(0,0,0,.32)'; g.fillRect(x0, y0, W, hh); }
+  g.save(); g.strokeStyle = (th && th.l) || '#8a7dff'; g.globalAlpha = .6; g.lineWidth = 2; g.beginPath(); g.moveTo(0, -24); g.lineTo(0, RH + 24); g.moveTo(RW, -24); g.lineTo(RW, RH + 24); g.stroke(); g.restore();
+}
+{ const w1 = wmWallsDraw; wmWallsDraw = function () { const r = w1.apply(this, arguments); try { marginFill(); } catch (e) {} return r; }; }
+
 /* =============================== DÉCORS CASSABLES =============================== */
-function fixSpawns() {   // v104 : aucun ennemi ne naît dans un bloc de terre / de pierre : il est posé au-dessus
-  for (const e of (typeof E !== 'undefined' ? E : [])) for (let k = 0; k < 6; k++) {
-    const q = WL.find(q => e.x < q.x + q.w && e.x + e.w > q.x && e.y < q.y + q.h && e.y + e.h > q.y); if (!q) break;
-    e.y = q.y - e.h - 1; if (e.vy > 0) e.vy = 0; } }
+/* v105 : placement des ennemis — jamais dans un bloc, jamais au-dessus du plafond, jamais hors de la salle.
+   (v104 posait un ennemi coincé dans un bloc « au-dessus » du bloc : pour un bloc de plafond, cela le sortait de la salle.) */
+const ceilY = () => { let c = (typeof TOFF === 'number' ? TOFF : 0) + 32; for (const q of WL) if (q.x <= 0 && q.w >= RW && q.y <= 0 + (typeof TOFF === 'number' ? TOFF : 0)) c = Math.max(c, q.y + q.h); return c; };
+const mobBox = (e, x, y) => ({ x, y, w: e.w, h: e.h });
+const clashWL = (x, y, w, h, m) => WL.some(q => x < q.x + q.w + m && x + w > q.x - m && y < q.y + q.h + m && y + h > q.y - m);
+function mobOK(e) { const c = ceilY(); return e.x >= 0 && e.x + e.w <= RW && e.y >= c - 1 && e.y + e.h <= RF + 1 && !clashWL(e.x, e.y, e.w, e.h, -4); }
+function placeMob(e) {
+  if (!e || e.bs || mobOK(e)) return false;
+  const c = ceilY(), ox = e.x, oy = e.y, w = e.w, h = e.h; let best = null, bd = 1e9;
+  const cand = (x, y, x0, x1) => { x = Math.max(4, Math.min(RW - w - 4, Math.round(x))); if (y < c || y + h > RF) return; if (clashWL(x, y, w, h, 2)) return; const d = Math.abs(x - ox) + Math.abs(y - oy) * .5; if (d < bd) { bd = d; best = { x, y, x0, x1 }; } };
+  if (e.fl) { for (let y = c + 6; y <= RF - 70; y += 14) for (let x = 24; x <= RW - w - 24; x += 20) cand(x, y, x - 70, x + 70); }
+  else {
+    for (let x = 24; x <= RW - w - 24; x += 12) cand(x, RF - h, Math.max(0, x - 120), Math.min(RW - w, x + 120));
+    for (const p of plats) { if (p.y < c + h + 4) continue; for (let x = p.x; x <= p.x + p.w - w; x += 12) cand(x, p.y - h, p.x, Math.max(p.x + 1, p.x + p.w - w)); }
+  }
+  if (!best) { best = { x: Math.max(4, Math.min(RW - w - 4, ox)), y: RF - h, x0: 0, x1: RW - w }; }
+  e.x = best.x; e.y = best.y; e.vy = 0; if (e.fl) e.hy = e.y;
+  if (e.x0 != null) { e.x0 = Math.max(0, Math.min(best.x0, e.x)); e.x1 = Math.min(RW - w, Math.max(best.x1, e.x)); }
+  window.V105S.moved++; return true; }
+function fixSpawns() { for (const e of (typeof E !== 'undefined' ? E : [])) { placeMob(e); e.__pl = 1; e.__ph = e.h; e.__pw = e.w; } }
+window.V105S = { moved: 0, clamped: 0 };
+window.V105 = { placeMob, mobOK, ceilY };
+function pushOut(e) {   // un ennemi ne reste jamais enfoncé de plus de 4 px dans un bloc : poussé par l'axe de pénétration minimale
+  const y0 = e.y;
+  for (let k = 0; k < 4; k++) {
+    const q = WL.find(q => e.x < q.x + q.w - 4 && e.x + e.w > q.x + 4 && e.y < q.y + q.h - 4 && e.y + e.h > q.y + 4); if (!q) break;
+    const l = e.x + e.w - q.x, r = q.x + q.w - e.x, u = e.y + e.h - q.y, d = q.y + q.h - e.y, m = Math.min(l, r, u, d);
+    if (m === u) { e.y = q.y - e.h; if (e.vy > 0) e.vy = 0; } else if (m === d) { e.y = q.y + q.h; if (e.vy < 0) e.vy = 0; } else if (m === l) e.x = q.x - e.w; else e.x = q.x + q.w;
+    window.V105S.pushed = (window.V105S.pushed || 0) + 1; }
+  if (e.fl && e.y !== y0 && e.hy != null) e.hy += e.y - y0;
+  e.x = Math.max(0, Math.min(RW - e.w, e.x)); }
+function fixObj(o) {   // v105 : coffres / marchand jamais dans un bloc
+  if (!o || !(o.w > 0) || !clashWL(o.x, o.y, o.w, o.h, -4)) return;
+  for (let d = 8; d < RW; d += 8) for (const sg of [1, -1]) { const nx = o.x + sg * d; if (nx < 20 || nx + o.w > RW - 20) continue; if (!clashWL(nx, o.y, o.w, o.h, 2)) { o.x = nx; window.V105S.objs = (window.V105S.objs || 0) + 1; return; } } }
+function clampMobs() {
+  try { fixObj(chest); fixObj(CH2); fixObj(mc); fixObj(rchest); } catch (e) {}   // chaque image : les ennemis nouvellement apparus (vagues, renforts) sont validés une fois ; plafond et sol bornent tous les autres
+  const c = ceilY();
+  for (const e of E) { if (!e || e.bs) continue;
+    if (!e.__pl || e.__ph !== e.h || e.__pw !== e.w) { placeMob(e); e.__pl = 1; e.__ph = e.h; e.__pw = e.w; }
+    if (!e.gb && !mobOK(e)) pushOut(e);
+    if (!e.gb) { if (!mobOK(e)) { e.__st = (e.__st || 0) + 1; if (e.__st > 40) { e.__st = 0; if (placeMob(e)) window.V105S.unstuck = (window.V105S.unstuck || 0) + 1; } } else e.__st = 0; }
+    if (e.y < c) { e.y = c; if (e.vy < 0) e.vy = 0; if (e.fl && e.hy < c + 6) e.hy = c + 6; window.V105S.clamped++; }
+    if (e.x < 0) e.x = 0; else if (e.x + e.w > RW) e.x = RW - e.w; } }
+{ const e0 = WorldCoordinator.prototype._enter; WorldCoordinator.prototype._enter = function () { const r = e0.apply(this, arguments); try { clampMobs(); } catch (e) {} return r; }; }
+{ const u0 = upd; upd = function () { const r = u0.apply(this, arguments); try { clampMobs(); } catch (e) {} return r; }; }
 let BRK = [];
 const KINDS = [['crate', '#9a6b34', '#5c3a14', 18, 18], ['barrel', '#8a5a2a', '#4a2c10', 16, 22], ['jar', '#c98a4a', '#6b3f1a', 14, 18], ['crystal', '#7af0ff', '#2a6a8a', 14, 22], ['rock', '#8a8794', '#4a4852', 22, 16]];
 function brkGen() { BRK = []; if (lvl % 10 === 0 || (window.NET && NET.role === 'guest')) return; if (Math.random() < .3) return;
