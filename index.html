@@ -5012,7 +5012,7 @@ wmTick();{const t=wmT();if(t>=3&&P.at>0&&tick%Math.max(1,6-(t>>1))==0)parts.push
   function onAction(m) {
     const p = NET.P2; if (!p || NET.role !== 'host' || !m || typeof m !== 'object') return;
     if (m.t !== 'sk' && m.t !== 'wp' && m.t !== 'cz' && (p.hp <= 0 || p.dn)) return;     // un joueur à terre n'interagit pas
-    if (m.t === 'pk' && choice && NET.owner === 'guest') asP(p, () => (window.__pickW || pickO)(m.i));
+    if (m.t === 'pk' && choice && NET.owner === 'guest') asP(p, () => { window.__fromG = 1; try { (window.__pickW || pickO)(m.i); } finally { window.__fromG = 0; } });
     else if (m.t === 'sp' && shop && NET.owner === 'guest') asP(p, () => shopPickO(m.i));
     else if (m.t === 'os' && mc && cleared && !shop && !choice && p.x < mc.x + mc.w + 6 && p.x + p.w > mc.x - 6) { NET.owner = 'guest'; asP(p, openShopO); }
     else if (m.t === 'prog') { if (Array.isArray(m.sw)) { NET.guestSW = m.sw.filter(s => typeof s === 'string').slice(0, 80); SWB = null; } }
@@ -5124,7 +5124,7 @@ wmTick();{const t=wmT();if(t>=3&&P.at>0&&tick%Math.max(1,6-(t>>1))==0)parts.push
   pickO = pick; shopPickO = shopPick; openShopO = openShop; takeWO = takeW;
   const route = (type, orig, mk) => function (a) {
     if (NET.role === 'guest') { if (NET.ro && (type === 'pk' || type === 'sp')) return; NET.sendA(mk(a)); return; }   // aperçu du choix de J1 : aucune action
-    if (NET.role === 'host' && NET.open && NET.owner === 'guest' && (type === 'pk' || type === 'sp')) return;   // menu de J2 : l'hôte ne l'actionne pas
+    if (NET.role === 'host' && NET.open && NET.owner === 'guest' && (type === 'pk' || type === 'sp') && !window.__fromG) return;   /* v112 : le choix envoyé par J2 passe (seules les touches de J1 sont bloquées) */   // menu de J2 : l'hôte ne l'actionne pas
     return orig.apply(this, arguments);
   };
   pick = route('pk', pickO, i => ({ t: 'pk', i }));
@@ -11374,8 +11374,8 @@ document.addEventListener('touchmove', e => { if (!keepUI(e.target)) e.preventDe
 { const d0 = drawAim; drawAim = function () { if (Z.R && !Z.R.dead) return; return d0.apply(this, arguments); }; }
 window.TOUCH2 = { Z, clearAll, gameOn, radius };
 /* repère de version discret sur l’écran d’accueil : permet de vérifier que l’appareil charge bien ce fichier (et pas une copie en cache) */
-window.MI_VERSION = 'v112';
-{ const h0 = drawHome; drawHome = function () { const r = h0.apply(this, arguments); try { g.save(); g.font = 'bold 12px system-ui'; g.textAlign = 'right'; { const t = 'VERSION v112 · nouveaux mobs', tw = g.measureText(t).width; g.fillStyle = 'rgba(10,8,20,.78)'; g.fillRect(W - 14 - tw, H - 21, tw + 10, 17); g.fillStyle = 'rgba(255,224,130,.95)'; g.fillText(t, W - 8, H - 8); } g.restore(); } catch (e) {} return r; }; }
+window.MI_VERSION = 'v112.1';
+{ const h0 = drawHome; drawHome = function () { const r = h0.apply(this, arguments); try { g.save(); g.font = 'bold 12px system-ui'; g.textAlign = 'right'; { const t = 'VERSION v112.1 · nouveaux mobs · choix de J2 réparé', tw = g.measureText(t).width; g.fillStyle = 'rgba(10,8,20,.78)'; g.fillRect(W - 14 - tw, H - 21, tw + 10, 17); g.fillStyle = 'rgba(255,224,130,.95)'; g.fillText(t, W - 8, H - 8); } g.restore(); } catch (e) {} return r; }; }
 })();
 </script>
 
